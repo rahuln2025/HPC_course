@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#PBS -N ex03_output
+#PBS -q teachingq
+#PBS -l select=1:ncpus=1:mpiprocs=1
+#PBS -l walltime=00:00:30
+#PBS -o ex02d.out
+#PBS -e ex02d.err
+
+echo -e "Job started from $(pwd)."
+echo "Changing directory to..."
+PBS_O_WORKDIR=$HOME/HPC_CMS_2025
+cd $PBS_O_WORKDIR
+echo -e "$(pwd)"
+
+export OMP_NUM_THREADS=4
+time ./ex02d

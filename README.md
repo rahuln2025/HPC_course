@@ -82,3 +82,83 @@ time ./ex02a
 ```qsub job.script```
 
 3. In the path specified in job.script, you shall see ```*.out``` and ```*.err``` files generated. These contain your results and error logs. 
+
+
+# Matrix Handling in C++
+
+### Matrix storage and indexing in C++ with std::vector
+
+In this code, matrices are stored as one-dimensional (`1D`) arrays using `std::vector<double>`. This is a common and efficient approach in C++ for handling matrices, especially when the size is determined at runtime.
+
+For an `N x N` matrix, you declare a vector of size `N * N`:
+
+```cpp
+std::vector<double> a(N * N);
+```
+
+Each element of the matrix can be accessed using the formula `a[i * N + j]`, where `i` is the row index and `j` is the column index. This is known as **row-major order** storage.
+
+#### Example: 3x3 matrix
+
+Suppose you want to store this 3x3 matrix:
+
+```
+| 1  2  3 |
+| 4  5  6 |
+| 7  8  9 |
+```
+
+You declare the vector as:
+
+```cpp
+std::vector<double> mat(3 * 3);
+```
+
+To fill the matrix:
+
+```cpp
+int N = 3;
+std::vector<double> mat(N * N);
+for (int i = 0; i < N; ++i) {
+    for (int j = 0; j < N; ++j) {
+        mat[i * N + j] = i * N + j + 1;
+    }
+}
+```
+
+**Accessing elements:**
+- `mat[0 * 3 + 0]` is 1 (row 0, col 0)
+- `mat[1 * 3 + 2]` is 6 (row 1, col 2)
+- `mat[2 * 3 + 1]` is 8 (row 2, col 1)
+
+This method allows you to efficiently handle matrices of any size using a single vector, with easy indexing for both reading and writing elements.
+
+You can **print** it using:
+
+```cpp
+// Print function
+void print(const unsigned long N, const std::vector<double> &a)
+{
+    unsigned long i,j;
+    for (i = 0; i < N; ++i) {
+        for (j = 0; j < N; ++j) {
+            std::cout << " " << a[i * N + j];
+        }
+        std::cout << "\n";
+    }
+    std::cout << "\n";
+}
+
+print(N, mat);
+```
+
+This will output:
+
+```
+1 2 3
+4 5 6
+7 8 9
+```
+
+This is useful for debugging and verifying the contents of the matrices after initialization and multiplication, especially when working with small matrices. For large matrices, printing is skipped to avoid overwhelming the output.
+

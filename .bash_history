@@ -1,5 +1,3 @@
-less log.err
-#1734387257
 less log.
 #1734387260
 less log.out
@@ -960,3 +958,4 @@ ls
 cat ~/.nanorc
 ls -l
 pwd
+ls

@@ -1,0 +1,19 @@
+Job started from /home/rn14pyry/pbs.985539.mmaster02.x8z.
+Changing directory to...
+/home/rn14pyry/HPC_CMS_2025
+OMP_NUM_THREADS set to 1
+#simulations: N = 10000000
+Computation took: 1.07211 seconds.
+Pi = 3.14169
+OMP_NUM_THREADS set to 2
+#simulations: N = 20000000
+Computation took: 3.05099 seconds.
+Pi = 3.14143
+OMP_NUM_THREADS set to 4
+#simulations: N = 40000000
+Computation took: 12.3291 seconds.
+Pi = 3.14201
+OMP_NUM_THREADS set to 8
+#simulations: N = 80000000
+Computation took: 49.5679 seconds.
+Pi = 3.14147

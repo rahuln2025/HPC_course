@@ -1,0 +1,30 @@
+#!/bin/bash
+
+#PBS -N ex05_output
+#PBS -q teachingq
+#PBS -l select=1:ncpus=1:mpiprocs=1
+#PBS -l walltime=00:00:30
+#PBS -o ex05a.out
+#PBS -e ex05a.err
+
+echo -e "Job started from $(pwd)."
+echo "Changing directory to..."
+PBS_O_WORKDIR=$HOME/HPC_CMS_2025
+cd $PBS_O_WORKDIR
+echo -e "$(pwd)"
+
+export OMP_NUM_THREADS=1
+echo "OMP_NUM_THREADS set to $OMP_NUM_THREADS"
+time ./ex05a 10000000
+
+export OMP_NUM_THREADS=2
+echo "OMP_NUM_THREADS set to $OMP_NUM_THREADS"
+time ./ex05a 20000000
+
+export OMP_NUM_THREADS=4
+echo "OMP_NUM_THREADS set to $OMP_NUM_THREADS"
+time ./ex05a 40000000
+
+export OMP_NUM_THREADS=8
+echo "OMP_NUM_THREADS set to $OMP_NUM_THREADS"
+time ./ex05a 80000000

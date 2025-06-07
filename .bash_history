@@ -1,472 +1,3 @@
-module avail
-module load openmpi/gcc
-ls
-mpicc myprog.C
-cd ..
-ls
-cd rn14pyry
-ls
-mkdir HPC_CMS
-ls
-cd HPC_CMS
-ls
-touch mpprog.C
-nano myprog.C
-ls
-mpicc myprog.C
-nano myprog.C 
-mpicc myprog.C
-ls
-mpiexec -n 2 ./a.out
-module load python/gcc
-ls
-rm mpprog.C
-ls
-nano mpi_first.py
-mpiexec -n 2 python3 mpi_first.py
-nano mpi_second.py
-mpiexec -n 2 python3 mpi_second.py
-ls
-cd HPC_CMS/
-ls
-less mpi_first.py 
-ls
-module list
-modules
-allmodule
-ls
-qsub -I -1 select=1:ncpus=8:mpiprocs=8 -q entry_teachingq
-qsub -I -l select=1:ncpus=8:mpiprocs=8 -q entry_teachingq
-ls
-cd HPC_CMS/
-ls
-cd HPC_CMS
-ls
-cd ..
-mkdir HPC_CMS_Home
-ls
-cd HPC_CMS_Home
-ls
-cp ./../HPC_CMS/mpi_first.c ./
-cd ../HPC_CMS
-ls
-cat mpi_second.py 
-ls
-cat myprog.C 
-mv myprog.C mpi_first.C
-ls
-mv mpi_first.py mpi_second.py ./../HPC_CMS_Home/
-ls
-cd ..
-ls
-cd HPC_CMS_Home
-ls
-module load openmpi/gcc
-mpicc mpi_first.py -ompi_mpi_first.py
-ls
-cp ./../HPC_CMS/mpi_first.C ./
-ls
-mpicc mpi_first.C -ompi_first.C
-mpicc mpi_first.C -o mpi_first.out
-ls
-nano mpi_hpc23c_3.C
-ls
-mpicc mpi_hpc23c_3.C -0 mpi_hpc23c_3.out
-mpicc mpi_hpc23c_3.C -o mpi_hpc23c_3.out
-ls
-cat mpi_hpc23c_3.
-cat mpi_hpc23c_3.C
-cd /home/rn14pyry/pbs.664985.mmaster.x8z
-cd ..
-ls
-cd HPC_CMS_Home/
-ls
-mpiexec -n 5 ./mpi_hpc23c_6.C
-module load openmpi/gcc
-mpiexec -n 5 ./mpi_hpc23c_6.C
-ls
-mpiexec -n 5 ./mpi_hpc23c_6.out
-mpiexec -n 32 ./mpi_hpc23c_6.out
-exit
-ls
-cd HPC_CMS_Home/
-ls
-nano mpi_hpc23c_5.C
-mpicc mpi_hpc23c_5.C mpi_hpc23_5.out
-module load openmpi/gcc
-mpicc mpi_hpc23c_5.C -o mpi_hpc23_5.out
-ls
-qsub -I -l select=1:ncpus=8:mpiprocs=8 -q entry_teachingq
-cd /home/rn14pyry/pbs.664981.mmaster.x8z
-ls
-cd ..
-ls
-cd HPC_CMS_Home
-ls
-module load openmpi/gcc
-mpiexec -n 3 ./mpi_first.out
-mpiexec -n 3 ./mpi_hpc23c_3.out
-mpiexec -n 3 ./mpi_hpc23c_5.out
-mpiexec -n 3 ./mpi_hpc23_5.out
-ls
-nano mpi_hpc23c_5.C
-ls
-mpiexec -n 3 ./mpi_hpc23c_5.out
-echo "Hey I am still there"
-echo "Hey"
-mpiexec -n 4 ./mpi_hpc23c_6.out 
-mpiexec -n 5 ./mpi_hpc23c_6.out 
-mpiexec -n 32 ./mpi_hpc23c_6.out 
-mpiexec -n 2 ./mpi_hpc23c_6.out 
-mpiexec -n 12 ./mpi_hpc23c_6.out 
-mpiexec -n 6 ./mpi_hpc23c_6.out 
-mpiexec -n 8 ./mpi_hpc23c_6.out 
-qsub -I -l select=1:ncpus=40:mpiprocs=40 -q entry_teachingq
-ls
-cd HPC_CMS_Home/
-ls
-nano mpi_hpc23_5.C
-ls
-nano mpi_hpc23c_5.C 
-mpicc mpi_hpc23c_5.C -o mpi_hpc23c_5.out
-module load openmpi/gcc
-mpicc mpi_hpc23c_5.C -o mpi_hpc23c_5.out
-ls
-rm mpi_hpc23_5.out 
-ls
-ls -l
-echo "Hey I am here man."
-cp mpi_hpc23c_5.C mpi_hpc23c_6.C
-ls
-nano mpi_hpc23c_6.C
-ls
-cat mpi_hpc23c_6.C 
-mpicc mpi_hpc23c_6.C -o mpi_hpc23c_6.out
-nano mpi_hpc23c_6.C 
-mpicc mpi_hpc23c_6.C -o mpi_hpc23c_6.out
-nano mpi_hpc23c_6.C 
-mpicc mpi_hpc23c_6.C -o mpi_hpc23c_6.out
-nano mpi_hpc23c_6.C 
-mpicc mpi_hpc23c_6.C -o mpi_hpc23c_6.out
-ls
-nano mpi_hpc23c_6.C 
-mpicc mpi_hpc23c_6.C -o mpi_hpc23c_6.out
-ls
-nano mpi_hpc23c_6.C 
-mpicc mpi_hpc23c_6.C -o mpi_hpc23c_6.out
-ls
-nano mpi_hpc23c_6.C 
-mpicc mpi_hpc23c_6.C -o mpi_hpc23c_6.out
-nano mpi_hpc23c_6.C 
-mpicc mpi_hpc23c_6.C -o mpi_hpc23c_6.out
-nano mpi_hpc23c_6.C 
-mpicc mpi_hpc23c_6.C -o mpi_hpc23c_6.out
-nano mpi_hpc23c_6.C 
-cat mpi_hpc23c_6.C
-mpicc mpi_hpc23c_6.C -o mpi_hpc23c_6.out
-nano mpi_hpc23c_6.C 
-mpicc mpi_hpc23c_6.C -o mpi_hpc23c_6.out
-nano mpi_hpc23c_6.C 
-mpicc mpi_hpc23c_6.C -o mpi_hpc23c_6.out
-nano mpi_hpc23c_6.C 
-mpicc mpi_hpc23c_6.C -o mpi_hpc23c_6.out
-nano mpi_hpc23c_6.C 
-mpicc mpi_hpc23c_6.C -o mpi_hpc23c_6.out
-exit
-ls
-cd HPC_CMS_Home
-ls
-nano mpi_hpc23c_6.C
-cat mpi_hpc23c_6.C
-cp mpi_hpc23c_6.C mpi_hpc23c_6_1.C
-ls
-nano mpi_hpc23c_6_1.C 
-touch mpi_hpc23c_6.py
-nano mpi_hpc23c_6.py
-module load python/gcc
-exit
-cd /home/rn14pyry/pbs.664995.mmaster.x8z
-cd ..
-ls
-cd HPC_CMS_Home
-ls
-module load openmpi/gcc
-mpicc -n 9 mpi_hpc23c_6.out
-mpexec -n 9 mpi_hpc23c_6.out
-mpiexec -n 9 mpi_hpc23c_6.out
-ls
-cat mpi_hpc23c_6.C
-module load python/gcc
-ls
-mpiexec -n 2 python3 mpi_hpc23c_6.py
-exit
-qsub -I -l select=1:ncpus=40:mpiprocs=40 -q entry_teachingq
-cd /home/rn14pyry/pbs.666244.mmaster.x8z
-cd ..
-ls
-cd HPC_CMS_Home
-ls
-module load openmpi/gcc
-module load python/gcc
-mpiexec -n 2 python3 mpi_hpc23c_6.py
-status
-job status
-jobs
-mpiexec -n 2 python3 mpi_hpc23c_6.py
-jobs
-mpiexec -n 2 python3 mpi_hpc23c_6.py
-
-mpiexec -n 2 python3 mpi_hpc23c_6.py
-mpiexec -n 3 python3 mpi_hpc23c_6.py
-mpiexec -n 10  python3 mpi_hpc23c_6.py
-mpiexec -n 2 python3 mpi_hpc23c_6.py
-calculator
-mpiexec -n 2 python3 mpi_hpc23c_6.py
-mpiexec -n 1 python3 mpi_hpc23c_6.py
-mpiexec -n 2 python3 mpi_hpc23c_6.py
-mpiexec -n 1 python3 mpi_hpc23c_6.py
-mpiexec -n 2 python3 mpi_hpc23c_6.py
-mpiexec -n 1 python3 mpi_hpc23c_6.py
-mpiexec -n 16  python3 mpi_hpc23c_6.py
-mpiexec -n 40 python3 mpi_hpc23c_6.py
-mpiexec -n 1 python3 mpi_hpc23c_6.py
-mpiexec -n 40 python3 mpi_hpc23c_6.py
-mpiexec -n 1 python3 mpi_hpc23c_6.py
-exit
-cd ..
-ls
-cd rn14pyry
-ls
-cd HPC_CMS_Home
-
-less mpi_hpc23c_6.py
-nano mpi_hpc23c_6.py
-less mpi_hpc23c_6.py 
-nano mpi_hpc23c_6.py
-ls
-exit
-exit
-#1733089048
-ls -l
-#1733089156
-ls -l HPC_CMS
-#1733089189
-nano mpi_hpc23c_6.C
-#1733089212
-nano mpi_hpc23c_6.py
-#1733089242
-cd HPC_CMS_Home
-#1733089246
-ls -l
-#1733089287
-less mpi_hpc23c_6.py
-#1734379589
-cd /home/rn14pyry/pbs.846263.mmaster02.x8z
-#1734380409
-exit
-#1734388362
-cd /home/rn14pyry/pbs.846287.mmaster02.x8z
-#1734388403
-exit
-#1734388465
-cd /home/rn14pyry/pbs.846288.mmaster02.x8z
-#1734388469
-ls
-#1734388471
-cd ..
-#1734388473
-ls
-#1734388484
-cd HPC_CMS_202425/
-#1734388485
-ls
-#1734388543
-time ./hello-openmp 
-#1734388561
-export OMP_NUM_THREADS=4
-#1734388565
-time ./hello-openmp 
-#1734388604
-clear
-#1734388607
-exit
-#1734378398
-modul avail
-#1734378420
-module load openmpi/gcc
-#1734378464
-module load openmpi
-#1734378478
-ls
-#1734378524
-module avail
-#1734378687
-module load openmpi/gcc/11.4/0
-#1734378699
-module load openmpi/gcc/11.4.0
-#1734378774
-ls
-#1734378782
-ls HPC_CMS
-#1734378788
-ls HPC_CMS_
-#1734378791
-ls HPC_CMS_Home/
-#1734378809
-less mpi_first.C
-#1734378831
-cd HPC_CMS_Home/
-#1734378838
-less mpi_first.C
-#1734378856
-nano mpi_first.
-#1734378864
-ls
-#1734378871
-rm mpi_first.
-#1734378890
-nano mpi_first.C
-#1734378955
-mpicc mpi_first.C
-#1734378967
-ls
-#1734379057
-mpiexec -n 2 ./a.out
-#1734379507
-qstat -Q
-#1734379546
-qsub -I -q entry_teachingq
-#1734380422
-ls
-#1734380753
-nano mpi_hpc24a_2.C
-#1734382406
-g++ -o hello-openmp main.cpp -00 -fopenmp 
-#1734382453
-help(g++)
-#1734382463
-g++ -help
-#1734382469
-g++ -h
-#1734382675
-g++ -o hello-openmp  -fopenmp 
-#1734382762
-g++ -o hello-openmp main.cpp -o0 -fopenmp 
-#1734382794
-g++ -o hello-openmp main.cpp -O0 -fopenmp 
-#1734382809
-g++ -o hello-openmp mpi_hpc24a_2.C -O0 -fopenmp 
-#1734382965
-nano mpi_hpc24a_2.C 
-#1734383052
-g++ -o hello-openmp mpi_hpc24a_2.C -O0 -fopenmp 
-#1734383054
-ls
-#1734383090
-qsub hello-openmp 
-#1734383107
-ls
-#1734383269
-cd ..
-#1734383281
-mkdir HPC_CMS_202425
-#1734383288
-ls
-#1734383336
-cp HPC_CMS_Home/mpi_hpc24a_2.C HPC_CMS_202425/
-#1734383342
-cd HPC_CMS_202425/
-#1734383343
-ls
-#1734383352
-g++ -o hello-openmp mpi_hpc24a_2.C -O0 -fopenmp 
-#1734383358
-qsub hello-openmp 
-#1734383360
-ls
-#1734383388
-qstat
-#1734383437
-ls
-#1734383458
-less hello-openmp.o846265 
-#1734383466
-less hello-openmp.e846265 
-#1734383728
-ls
-#1734383752
-qstat
-#1734383914
-nano job.script
-#1734383994
-cd ~
-#1734383995
-ls
-#1734384005
-cd HPC_CMS_202425/
-#1734384015
-nano job.script 
-#1734384084
-ls
-#1734384099
-qsub job.script 
-#1734384103
-qstat
-#1734384108
-ls
-#1734384125
-qstat
-#1734384224
-ls
-#1734384228
-less log.out
-#1734384293
-cat my_file
-#1734384301
-nano my_file
-#1734384318
-cat my_file
-#1734384324
-qsub job.script 
-#1734384328
-ls
-#1734384333
-less log.err
-#1734384342
-qstat
-#1734386818
-ls
-#1734386823
-qstat
-#1734386827
-less log.err
-#1734386834
-less log.out
-#1734386896
-less my_file 
-#1734386992
-less log.out
-#1734387116
-nano job.script 
-#1734387164
-qsub job.script 
-#1734387170
-qstat
-#1734387180
-ls
-#1734387186
-less log.out
-#1734387203
-less log.err
-#1734387208
-rm log.err
-#1734387209
-ls
-#1734387213
-qstat
-#1734387222
-ls
-#1734387231
 less log.err
 #1734387257
 less log.
@@ -1366,3 +897,66 @@ ls
 less PVL2_output.out
 #1734554690
 less PVL2_output.err
+#1748499562
+ls
+#1748500174
+git init
+#1748500188
+ls
+#1748500196
+git status
+#1748500205
+git add .
+#1748500213
+git status
+#1748500232
+git commit -m Â'adding all old files from cluster'
+#1748500238
+git init
+#1748500244
+git status
+#1748500305
+git remote add origin https://github.com/rahuln2025/HPC_course.git
+#1748500313
+git push -u origin master
+#1748500582
+git status
+ls
+pwd
+cd HPC_CMS_202425/
+ls
+pwd
+#1749240883
+ls
+ls
+pwd
+pwd
+ls
+cd HPC_CMS
+ls
+cd ..
+pwd
+cd HPC_CMS_Home/
+ls
+pwd
+pwd
+ls
+cd PVL_202425/
+ls
+cd PVL2
+cd PVL2_3
+ls -al
+less job.script 
+cd ..
+less .nanorc
+ls -al
+nano .bashrc
+nano
+clear
+ls /usr/share/nano
+less ~/.nanorc
+cd ~
+ls
+cat ~/.nanorc
+ls -l
+pwd

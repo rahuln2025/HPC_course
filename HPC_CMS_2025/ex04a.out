@@ -1,0 +1,14 @@
+Job started from /home/rn14pyry/pbs.985519.mmaster02.x8z.
+Changing directory to...
+/home/rn14pyry/HPC_CMS_2025
+OMP_NUM_THREADS set to 8
+Matrix size: N = 100
+Thread 2 of 8
+Thread 5 of 8
+Thread 0 of 8
+Thread 6 of 8
+Thread 7 of 8
+Thread 1 of 8
+Thread 3 of 8
+Thread 4 of 8
+N too big for printed output.

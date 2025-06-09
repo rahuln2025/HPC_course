@@ -162,3 +162,103 @@ This will output:
 
 This is useful for debugging and verifying the contents of the matrices after initialization and multiplication, especially when working with small matrices. For large matrices, printing is skipped to avoid overwhelming the output.
 
+Useful matrix functions:
+
+Assuming the following matrices or vectors and using the ```#include <vector>``` standard template library:
+
+```cpp
+//Matrix
+
+const unsigned long N = static_cast<unsigned long>(n_input);
+std::cout << "Matrix size: N = " << N << "\n";
+
+std::vector<double> a(N * N);
+std::vector<double> b(N * N);
+std::vector<double> c(N * N, 0);  // Initialize c with zeros
+
+//Vector
+int n = 8;
+std::vector<double> a = {1, 2, 3, 4, 5, 6, 7, 8};
+std::vector<double> b = {1, 2, 3, 4, 5, 6, 7, 8};
+std::vector<double> c(n, 0);
+
+```
+
+**Matrix Initialization**
+```cpp
+// Matrix initialization function
+void initialize_matrices( const unsigned long N, 
+                          std::vector<double> &a,  
+                          std::vector<double> &b, 
+                          std::vector<double> &c)
+{
+    unsigned long i,j;
+
+    #pragma omp parallel for private(i,j)
+    for (i = 0; i < N; ++i) {
+        for (j = 0; j < N; ++j) {
+            a[i * N + j] = i + j + 1.0;
+            b[i * N + j] = 1.0 / (i + j + 1);
+            c[i * N + j] = 0;
+        }
+    }
+}
+```
+
+
+
+**Matrix Multiplication**
+
+
+
+```cpp
+// Matrix multiplication function
+void multiply_matrices( const unsigned long N, 
+                        const std::vector<double> &a, 
+                        const std::vector<double> &b, 
+                        std::vector<double> &c)
+{
+    unsigned long i, j, k;
+
+    #pragma omp parallel for private(i, j, k)
+    for (i = 0; i < N; ++i) {
+        for (j = 0; j < N; ++j) {
+            c[i * N + j] = 0;
+            for (k = 0; k < N; ++k) {
+                c[i * N + j] += a[i * N + k] * b[k * N + j];
+            }
+        }
+    }
+}
+
+```
+
+**Vector Addition & Printing**
+
+```cpp
+void add_vectors(const unsigned long N, 
+                 const std::vector<double> &a,
+                 const std::vector<double> &b,
+                 std::vector<double> &c) 
+{
+    unsigned long i, j, k;
+
+    #pragma omp parallel for private(i)
+    for (i = 0; i < N; i++) {
+        c[i] = a[i] + b[i];
+    }
+}
+
+void print_vector(const std::vector<double> &v)
+{
+    for (unsigned long i = 0; i < v.size(); i++) {
+        std::cout << v[i] << " ";
+    }
+    std::cout << std::endl;
+}
+
+```
+
+
+
+

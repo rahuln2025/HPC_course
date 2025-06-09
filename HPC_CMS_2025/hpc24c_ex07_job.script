@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#PBS -N ex07_output
+#PBS -q teachingq
+#PBS -l select=1:ncpus=8:mpiprocs=8
+#PBS -l walltime=00:01:00
+#PBS -o ex07.out
+#PBS -e ex07.err
+
+echo -e "Job started from $(pwd)."
+echo "Changing directory to..."
+PBS_O_WORKDIR=$HOME/HPC_CMS_2025
+cd $PBS_O_WORKDIR
+echo -e "$(pwd)"
+
+
+mpiexec ./ex07

@@ -25,7 +25,7 @@ Follow these commands:
 
 # Compiling C++ scripts, running executables & submitting jobs
 
-## Compile C++ scripts
+## Compile C++ scripts for OpenMP
 
 ### OpenMP exercises
 1. Assuming that your script already exists at the desired path. Let path for this case be ```/home/rn14pyry/HPC_CMS_2025```. Go to the location. 
@@ -38,7 +38,17 @@ Follow these commands:
 - ```-fopenmp```: Enable OpenMP support for parallelization/
 3. After compiling, you shall get an executable ```ex02a```. This will be run using jobscript or interactively or (not recommended to do) on the login node. 
 
-#### Running on login node
+## Compile C++ scripts for MPI
+
+### MPI exercises
+1. Assuming your script already exists at the desired path, for e.g. ```home/rn14pyry/HPC_CMS_2025```. Go to the location.
+2. First, you need to load module for MPI:
+```module load openmpi/gcc/11.4.0```
+3. Now you can compile:
+```mpic++ -o ex07 hpc24c_ex07.cpp```
+4. After compiling you will get an executable (also called as binary) with the name ```ex07```.
+
+#### Running OpenMP binary on login node
 This is not the recommended way to run your HPC executables, especially if they are large computations. 
 1. 
 ```
@@ -47,18 +57,38 @@ time ./ex02a # run executable with time tracking
 ```
 2. Your outputs will be printed in the terminal and not stored in a file.
 
-#### Job Script
+#### Running MPI binary on login node
+This is definitely not the recommended way to run your HPC binaries written with MPI. Prefer this approach for small tests with max 2 processes (n = 2). 
+
+```mpiexec -n 2 ./ex07```
+
+The ```-n 2``` specifies the use of two MPI processes (or two ranks). 
+
+The output will be printed in the terminal and not stored in a file. 
+
+#### Job Script for OpenMP
 The most recommended way to run any HPC executable. 
 1. Making a job.script: explained via example
 ```
 #!/bin/bash
 
-#PBS -N ex02_output # name of your job, will be shown in queue
-#PBS -q teachingq # job queue to which job will be submitted
-#PBS -l select=1:ncpus=1:mpiprocs=1 # requesting resources, 1 node with 1 CPU core with 1 MPI process
-#PBS -l walltime=00:01:00 # maximum walltime. After this time, job run will be terminated
-#PBS -o ex02a.out # file to store outputs
-#PBS -e ex02a.err # file to store error logs
+# name of your job, will be shown in queue
+#PBS -N ex02_output 
+
+# job queue to which job will be submitted
+#PBS -q teachingq
+ 
+# requesting resources, 1 node with 1 CPU core with 1 MPI process
+#PBS -l select=1:ncpus=1:mpiprocs=1 
+
+# maximum walltime. After this time, job run will be terminated
+#PBS -l walltime=00:01:00 
+
+# file to store outputs
+#PBS -o ex02a.out
+
+# file to store error logs
+#PBS -e ex02a.err
 
 # here onwards, commands to execute are specified
 
@@ -83,8 +113,33 @@ time ./ex02a
 
 3. In the path specified in job.script, you shall see ```*.out``` and ```*.err``` files generated. These contain your results and error logs. 
 
+#### Job Script for MPI
+1. It is quite similar to the one for OpenMP.
+```
+#!/bin/bash
 
-# Matrix Handling in C++
+#PBS -N ex07_output
+#PBS -q teachingq
+
+# for MPI you need to use more than 1 ncpus and mpiprocs
+#PBS -l select=1:ncpus=8:mpiprocs=8 
+#PBS -l walltime=00:01:00
+#PBS -o ex07.out
+#PBS -e ex07.err
+
+echo -e "Job started from $(pwd)."
+echo "Changing directory to..."
+PBS_O_WORKDIR=$HOME/HPC_CMS_2025
+cd $PBS_O_WORKDIR
+echo -e "$(pwd)"
+
+# execution command changes as compared to OpenMP
+mpiexec ./ex07
+```
+2. Submitting the job script is the same as for OpenMP binaries. 
+
+
+# Matrix Handling in C++ and OpenMP
 
 ### Matrix storage and indexing in C++ with std::vector
 

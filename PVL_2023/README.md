@@ -29,3 +29,4 @@ In my opinion, it is more like a cellular automata problem.
 
 ### Some glimpses of the results
 
+![sir_simulation](https://github.com/user-attachments/assets/e4481f44-12d9-4106-8fb1-85ad6ba47bc8)

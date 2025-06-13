@@ -11,3 +11,11 @@
 ### Above combination will ignore all files without extension ###
 
 /VOID*
+
+*.png
+
+*.gif
+
+*.txt
+
+*.cache/

@@ -1,0 +1,15 @@
+Job started from /home/rn14pyry/pbs.989472.mmaster02.x8z.
+Changing directory to...
+/home/rn14pyry/HPC_CMS_2025
+Hello from rank 2! (size 4)
+Hello from rank 1! (size 4)
+Hello from rank 3! (size 4)
+Hello from rank 0! (size 4)
+
+rank0: Received = 4711
+
+rank2: Received = 4711
+
+rank1: Received = 4711
+
+rank3: Received = 4711

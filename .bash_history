@@ -1,705 +1,3 @@
-less log.
-#1734387260
-less log.out
-#1734387329
-less job.script 
-#1734387346
-nano job.script 
-#1734387371
-qsub job.script 
-#1734387376
-qstat
-#1734387390
-ls
-#1734387394
-qstat
-#1734387434
-ls
-#1734387437
-less log.
-#1734387440
-less log.out 
-#1734387449
-rm log.err
-#1734387450
-ls
-#1734387456
-less log.out
-#1734387472
-nano job.script 
-#1734387568
-qsub job.script 
-#1734387607
-ls
-#1734387635
-less hpc_24a_ex01.out 
-#1734387651
-pwd[A
-#1734387668
-nano job.script 
-#1734387735
-qsub job.script 
-#1734387784
-qstat
-#1734387787
-ls
-#1734387798
-less hpc_24a_ex01.out 
-#1734388321
-qsub -I
-#1734388423
-qsub -I -q entry_teachingq
-#1734389226
-cd /home/rn14pyry/pbs.846289.mmaster02.x8z
-#1734389374
-cd ..
-#1734389375
-ls
-#1734389382
-cd HPC_CMS_202425/
-#1734389384
-ls
-#1734389390
-hello-openmp
-#1734389406
-export OMP_NUM_THREADS=4
-#1734389417
-time ./hello-openmp 
-#1734389427
-exit
-#1734388989
-ls
-#1734388999
-cd HPC_CMS_202425/
-#1734389001
-ls
-#1734389069
-echo -e "Create your C++ file"
-#1734389093
-nano mpi_hpc24a_2.C 
-#1734389124
-g++ -o hello-openmp mpi_hpc24a_2.C -O0 -fopenmp
-#1734389160
-echo -e "Create executable, here hello-openmp"
-#1734389184
-qsub -I -q entry_teachingq
-#1734389446
-history >> hpc_24a_ex01.hist
-#1734389448
-ls
-#1734389457
-less hpc_24a_ex01.hist 
-#1734472668
-cd /home/rn14pyry/pbs.846563.mmaster02.x8z
-#1734472715
-mpirun -np 2 ./PVL2.out
-#1734472782
-mpiexec PVL2.out
-#1734472798
-cd ..
-#1734472799
-ls
-#1734472802
-cd PVL_202425/
-#1734472803
-ls
-#1734472811
-mpirun -np 2 ./PVL2.out
-#1734472822
-mpiexec -np 2 ./PVL2.out
-#1734472913
-mpiexec -n 2 ./PVL2.out
-#1734473097
-exit
-#1734473151
-cd /home/rn14pyry/pbs.846564.mmaster02.x8z
-#1734473193
-mpiexec -n 2 ./PVL2.out
-#1734473267
-exit
-#1734473545
-cd /home/rn14pyry/pbs.846565.mmaster02.x8z
-#1734473591
-cd ..
-#1734473592
-ls
-#1734473595
-cd PVL_202425/
-#1734473596
-ls
-#1734473602
-mpiexec -n 2 ./PVL2.out
-#1734473752
-mpiexec --oversubscribe -n 2 ./PVL2.out
-#1734473836
-exit
-#1734473926
-cd /home/rn14pyry/pbs.846566.mmaster02.x8z
-#1734473934
-mpiexec --oversubscribe -n 2 ./PVL2.out
-#1734474094
-mpiexec --oversubscribe -n 2 ./PVL2
-#1734474108
-mpiexec -np 2 ./PVL2
-#1734474120
-mpiexec --oversubscribe -n 2 ./PVL2
-#1734474224
-mpiexec --oversubscribe -n 2 ./PVL2.out
-#1734474231
-exit
-#1734474746
-cd /home/rn14pyry/pbs.846567.mmaster02.x8z
-#1734474750
-cd ..
-#1734474818
-ls
-#1734474820
-cd PVL_202425/
-#1734474828
-mpiexec --oversubscribe -n 2 ./PVL2.out
-#1734474848
-mpiexec --oversubscribe -n 2 ./PVL2
-#1734474861
-mpiexec -n 2 ./PVL2
-#1734474865
-mpiexec --oversubscribe -n 2 ./PVL2
-#1734475052
-exit
-#1734475127
-cd /home/rn14pyry/pbs.846568.mmaster02.x8z
-#1734475131
-cd ..
-#1734475132
-ls
-#1734475134
-cd PVL_202425/
-#1734475135
-ls
-#1734475142
-mpiexec --oversubscribe -n 2 ./PVL2
-#1734475161
-mpiexec -n 2 ./PVL2
-#1734475197
-mpiexec --oversubscribe -n 2 ./PVL2
-#1734475832
-exit
-#1734468706
-ls
-#1734468715
-cd HPC_CMS_202425
-#1734468795
-ls
-#1734468803
-cd ..
-#1734468812
-]mkdir PVL_202425
-#1734468838
-ls
-#1734468852
-mkdir PVL_202425
-#1734468857
-ls
-#1734468863
-cd PVL_202425
-#1734469831
-nano PVL2.C
-#1734471993
-mpic++ -o PVL2.out PVL.C
-#1734472010
-mpiCC -o PVL2.out PVL.C
-#1734472044
-mpicc -o PVL2.out PVL.C
-#1734472119
-module available
-#1734472215
-module load openmpi/gcc/11.4.0
-#1734472228
-mpicc -o PVL2.out PVL.C
-#1734472235
-mpicc -o PVL2.out PVL2.C
-#1734472287
-nano PVL2.C
-#1734472381
-mpicc -o PVL2.out PVL2.C
-#1734472481
-nano PVL2.C
-#1734472507
-mpicc -o PVL2.out PVL2.C
-#1734472510
-ls
-#1734472626
-qsub -I -q entry_teachingq
-#1734473099
-ls
-#1734473109
-qsub -I -q teachingq
-#1734473274
-less PVL2.C
-#1734473335
-nano PVL2.C
-#1734473489
-mpicc -o PVL2 PVL2.C
-#1734473492
-ls
-#1734473503
-qsub -I -q teachingq
-#1734473838
-ls
-#1734473844
-nano PVL2.C
-#1734473879
-mpicc -o PVL2 PVL2.C
-#1734473884
-qsub -I -q teachingq
-#1734474321
-ls
-#1734474332
-nano PVL2.C
-#1734474398
-mpicc -o PVL2 PVL2.C
-#1734474446
-mpiexec -n 2 PVL2
-#1734474704
-qsub -I -q teachingq
-#1734475055
-l
-#1734475056
-ls
-#1734475062
-nano PVL2.C
-#1734475080
-mpicc -o PVL2 PVL2.C
-#1734475085
-qsub -I -q teachingq
-#1734475835
-exit
-#1734548206
-cd /home/rn14pyry/pbs.846754.mmaster02.x8z
-#1734548222
-cd ..
-#1734548223
-ls
-#1734548227
-cd PVL_202425/
-#1734548228
-ls
-#1734548236
-mpiexec -n 2 PVL2
-#1734548267
-module load openmpi/gcc/11.4.0
-#1734548271
-mpiexec -n 2 PVL2
-#1734548613
-mpiexec -n 2 ./PVL2
-#1734548776
-ls
-#1734548779
-cd ..
-#1734548780
-ls
-#1734548789
-cd HPC_CMS_202425/
-#1734548790
-ls
-#1734548799
-less job.script
-#1734548808
-exit
-#1734549033
-cd /home/rn14pyry/pbs.846757.mmaster02.x8z
-#1734549051
-module load openmpi/gcc/11.4.0
-#1734549059
-ls
-#1734549062
-cd ..
-#1734549063
-ls
-#1734549065
-cd PVL_202425/
-#1734549066
-ls
-#1734549070
-cd ..
-#1734549078
-cd HPC_CMS_202425/
-#1734549078
-ls
-#1734549094
-qsub job.script
-#1734549104
-ls
-#1734549108
-qstat
-#1734549221
-ls
-#1734549224
-qstat
-#1734549230
-less log.out 
-#1734549277
-cp job.script ../PVL_202425/
-#1734549280
-cd ..
-#1734549281
-ls
-#1734549285
-cd PVL_202425/
-#1734549286
-ls
-#1734549291
-nano job.script
-#1734549298
-exit
-#1734549443
-cd /home/rn14pyry/pbs.846760.mmaster02.x8z
-#1734549479
-qsub job.script
-#1734549493
-module load openmpi/gcc/11.4.0
-#1734549555
-qsub job.script
-#1734549653
-cd ..
-#1734549656
-ls
-#1734549659
-cd PVL_202425/
-#1734549659
-ls
-#1734549663
-qsub job.script
-#1734549666
-qstat
-#1734549803
-ls
-#1734549812
-less PVL2.out
-#1734549821
-exit
-#1734552525
-cd /home/rn14pyry/pbs.846779.mmaster02.x8z
-#1734552529
-ls
-#1734552533
-cd ..
-#1734552535
-ls
-#1734552544
-cd ~
-#1734552545
-ls
-#1734552554
-cd PVL_202425
-#1734552559
-ls
-#1734552576
-less job.script
-#1734552579
-pwd
-#1734552592
-exit
-#1734552766
-cd /home/rn14pyry/pbs.846781.mmaster02.x8z
-#1734552770
-ls
-#1734552773
-cd ..
-#1734552777
-cd PVL_202425
-#1734552778
-ls
-#1734552787
-mpiexec -n 2 PVL2_2
-#1734552802
-mpiexec -oversubscribe -n 2 PVL2_2
-#1734552824
-exit
-#1734553779
-ls
-#1734553788
-qsub -I -q teachingq
-#1734553830
-cd /home/rn14pyry/pbs.846790.mmaster02.x8z
-#1734553841
-ls
-#1734553846
-cd ~
-#1734553849
-ls
-#1734553892
-mpiexec -n 2 PVL2_2
-#1734553903
-module load openmpi/gcc/11.4.0
-#1734553906
-mpiexec -n 2 PVL2_2
-#1734553945
-pqd
-#1734553949
-pwd
-#1734553952
-ls
-#1734554054
-cd ~
-#1734554055
-ls
-#1734556122
-cd PVL_202425
-#1734556123
-ls
-#1734556130
-qsub job.script
-#1734556135
-qstat
-#1734556189
-ls
-#1734556191
-qstat
-#1734556199
-less PVL2_output.out
-#1734556207
-less PVL2_output.err
-#1734556238
-ls
-#1734556242
-clear
-#1734556243
-ls
-#1734556277
-nano job.script
-#1734556354
-qsub job.script
-#1734556357
-qstat
-#1734556399
-
-#1734556473
-qstat
-#1734556551
-less PVL_output.out
-#1734556557
-less PVL2_output.out
-#1734556569
-less PVL2_output.err
-#1734556585
-nano job.script
-#1734556636
-qsub job.script
-#1734556661
-qstat
-#1734557042
-less PVL2_output.out
-#1734557067
-less PVL2_output.err
-#1734557309
-nano job.script
-#1734557339
-mpiexec -n 2 PVL2_3
-#1734557358
-module load openmpi/gcc/11.4.0
-#1734557362
-mpiexec -n 2 PVL2_3
-#1734557375
-nano job.script
-#1734557402
-qsub job.script
-#1734557410
-qstat
-#1734557425
-less job.script
-#1734557564
-qstat
-#1734557572
-less PVL2_output.out
-#1734557579
-nano job.script
-#1734557618
-qsub job.script
-#1734557655
-qstat
-#1734557711
-less PVL2_output.out
-#1734557727
-less PVL2_output.err
-#1734557778
-less PVL2.C
-#1734557801
-nano PVL2.C
-#1734557842
-less PVL2.C
-#1734557973
-less job.script
-#1734558010
-ls
-#1734558016
-rm PVL2_2
-#1734558019
-rm PVL2
-#1734558025
-rm hpc_24a_ex01.out
-#1734558034
-rm hpc_24a_ex01.err 
-#1734558035
-ls
-#1734558051
-qsub job.script
-#1734558056
-qstat
-#1734558245
-less PVL2_output.out
-#1734558256
-less PVL2_output.err
-#1734558414
-ls -l
-#1734558505
-less PVL2_output.out
-#1734558915
-ls
-#1734558929
-rm PVL2.out
-#1734558930
-ls
-#1734558949
-less PVL2_output.out
-#1734558957
-exit
-#1734548140
-ls
-#1734548144
-cd PVL_202425/
-#1734548144
-ls
-#1734548164
-qsub -I -q teachingq
-#1734548930
-qsub job.script
-#1734548947
-ls
-#1734548986
-qstat
-#1734548991
-qsub -I -q teachingq
-#1734549301
-ls
-#1734549314
-nano job.script
-#1734549401
-qsub -I -q teachingq
-#1734549831
-less PVL2.out
-#1734549859
-ls
-#1734549872
-less hpc_24a_ex01.
-#1734549875
-less hpc_24a_ex01.out 
-#1734549894
-mpiexec -n 2 PVL2
-#1734549923
-less PVL2.C
-#1734549935
-nano PVL2.C
-#1734550043
-cp PVL2.C PVL2.cpp
-#1734550045
-ls
-#1734550065
-mpicpp -o PVL2_2 PVL2.cpp
-#1734550083
-mpicc -o PVL2_2 PVL2.cpp
-#1734550153
-mpicc -o PVL2 PVL2.pp
-#1734550426
-module load mpich/gcc
-#1734550443
-module available
-#1734550531
-module --default avaik
-#1734550536
-module --default avail
-#1734550582
-module load mpich
-#1734550601
-cd ..
-#1734550607
-module load mpich/gcc
-#1734550655
-module load mpicc/gcc
-#1734550698
-l
-#1734550700
-ls
-#1734550706
-cd HPC_CMS
-#1734550707
-ls
-#1734550714
-less mpi_first.C 
-#1734550724
-cd ..
-#1734550732
-cd HPC_CMS_Home
-#1734550734
-ls
-#1734550748
-less mpi_hpc23c_3.C
-#1734550761
-cd ..
-#1734550767
-ls
-#1734550769
-cd PVL_202425/
-#1734550774
-ls
-#1734550791
-less PVL2.C
-#1734550798
-nano PVL2.C
-#1734550872
-mpicc PVL2.C PVL2_2.out  
-#1734550884
-mpiCC PVL2.C PVL2_2.out  
-#1734550927
-module load openmpi/gcc/11.4.0
-#1734550935
-mpicc PVL2.C PVL2_2.out  
-#1734550960
-mpicc PVL2.C -i PVL2_2.out  
-#1734550977
-mpicc --help
-#1734551018
-mpicc -o PVL2.C PVL2.out
-#1734551028
-clear
-#1734551029
-ls
-#1734551042
-nano PVL2.cpp
-#1734551053
-mpicc -o PVL2.cpp PVL2.out
-#1734551069
-mpicc -o PVL2.cpp PVL2_2
-#1734551098
-mpicc -o PVL2_2 PVL2.cpp
-#1734551101
-ls
-#1734551116
-ls -l
-#1734551120
-cd ..
-#1734551120
-ls
-#1734551125
-cd PVL_202425
-#1734551127
-ls
-#1734551322
-nano PVL2.C
-#1734551346
-mpicc -o PVL2_2 PVL2.C
-#1734551347
-ls
-#1734551355
 nano job.script
 #1734551477
 qsub job.script
@@ -959,3 +257,354 @@ cat ~/.nanorc
 ls -l
 pwd
 ls
+pwd
+ls
+mkdir HPC_CMS_2025
+cd HPC_CMS
+cd ..
+cd HPC_CMS_2025
+git status
+cd ..
+cd PBS_O_WORKDIR
+cd $HOME/HPC_CMS_2025
+echo "Run on login node for testing"
+export OMP_NUM_THREADS=4
+time ./hello-openmp 
+time ./hello-openmp 
+time ./hello-openmp
+qsub hpc24a_ex02_job.script 
+qsub hpc24a_ex02_job.script 
+export OMP_NUM_THREADS=4
+time ./ex02a 
+qsub hpc24a_ex02a_job.script 
+qsub hpc24a_ex02a_job.script
+qsub hpc24a_ex02a_job.script
+pwd
+git status
+git add .gitignore
+cd ..
+git add .gitignore 
+git commit -m 'gitignore'
+git status
+git add README.md 
+git commit -m 'Updated instructions for running OpenMP scripts"
+git commit -m 'Updated instructions for running OpenMP scripts'
+git status
+cd HPC_CMS_2025
+ls
+git status
+git add .
+git commit -m 'Ex02a'
+git push
+g++ -o ex02d hpc24a_ex02d.cpp -O0 -fopenmp
+ls
+qsub hpc24a_ex02d_job.script 
+g++ -o ex02d hpc24a_ex02d.cpp -O0 -fopenmp
+qsub hpc24a_ex02d_job.script 
+g++ -o ex02d hpc24a_ex02d.cpp -O0 -fopenmp
+qsub hpc24a_ex02d_job.script 
+g++ -o ex02d hpc24a_ex02d.cpp -O0 -fopenmp
+qsub hpc24a_ex02d_job.script 
+qsub hpc24a_ex02d_job.script 
+g++ -o ex02d hpc24a_ex02d.cpp -O0 -fopenmp
+qsub hpc24a_ex02d_job.script 
+g++ -o ex02d hpc24a_ex02d.cpp -O0 -fopenmp
+qsub hpc24a_ex02d_job.script 
+g++ -o ex03a hpc24a_ex03a.cpp -O0 -fopenmp
+g++ -o ex03a hpc24a_ex03a.cpp -O0 -fopenmp
+ls
+qsub hpc24a_ex03a_job.script 
+g++ -o ex03a hpc24a_ex03a.cpp -O0 -fopenmp
+qsub hpc24a_ex03a_job.script 
+g++ -o ex03a hpc24a_ex03a.cpp -O0 -fopenmp
+pwd
+ls
+nano instructions.txt
+touch README.md
+git status
+git add README.md 
+git commit -m 'Update README for instructions'
+git push
+cd HPC_CMS_2025
+ls
+echo "first compile program"
+module load openmpi/gcc/11.4.0/4.1.6
+module load python/gcc/11.4.0/3.11.7
+g++ -fopenmp hpc24a_ex02.C -o hpc24a_ex02.out
+g++ -fopenmp hpc24a_ex02.C -o hpc24a_ex02.out
+gcc -fopenmp hpc24a_ex02.C -o hpc24a_ex02.out
+ls
+g++ -o hello-openmp hpc24a_ex02.C -O0 -fopenmp
+g++ -o hello-openmp hpc24a_ex02.cpp -O0 -fopenmp
+g++ -o hello-openmp hpc24a_ex02.cpp -O0 -fopenmp
+g++ -o hello-openmp hpc24a_ex02.cpp -O0 -fopenmp
+g++ -o hello-openmp hpc24a_ex02.cpp -O0 -fopenmp
+touch jobscript_hpc24a_ex02.sh
+g++ -o hello-openmp hpc24a_ex02.cpp -O0 -fopenmp
+g++ -o ex02a hpc24a_ex02a.cpp -O0 -fopenmp
+g++ -o ex03a hpc24a_ex03a.cpp -O0 -fopenmp
+g++ -o ex03a hpc24a_ex03a.cpp -O0 -fopenmp
+qsub hpc24a_ex03a_job.script 
+g++ -o ex03a hpc24a_ex03a.cpp -O0 -fopenmp
+qsub hpc24a_ex03a_job.script 
+g++ -o ex03d hpc24a_ex03d.cpp -O0 -fopenmp
+qsub hpc24a_ex03d_job.script 
+qsub hpc24a_ex03d_job.script 
+g++ -o ex03d hpc24a_ex03d.cpp -O0 -fopenmp
+qsub hpc24a_ex03d_job.script 
+qsub hpc24a_ex03d_job.script 
+g++ -o ex03a hpc24a_ex03a.cpp -O0 -fopenmp
+qsub hpc24a_ex03a_job.script 
+g++ -o ex03d hpc24a_ex03d.cpp -O0 -fopenmp
+qsub hpc24a_ex03d_job.script 
+git status
+git status
+git add .
+git commit -m 'hpc24a exercise codes and results'
+git push
+cd ..
+ls
+mkdir VOID
+mv -R HPC_CMS HPC_CMS_202425 HPC_CMS_Home ./VOID/
+mv 
+mv HPC_CMS HPC_CMS_202425 HPC_CMS_Home ./VOID/
+ls
+cd PVL_202425/
+ls
+less job.script 
+cd ..
+ls
+mv PVL2_2 ./VOID/
+ls
+ls ./PVL_202425/
+ls
+mv PVL_202425/ ./VOID
+ls
+git status
+git status
+git add .
+git commit -m 'Cleaned old stuff'
+git push
+git status
+cd HPC_CMS_2025/
+g++ -o ex04a hpc24b_ex04.cpp -O0 -fopenmp
+ls
+qsub hpc24a_ex03d_job.script 
+qsub -n 1 hpc24b_ex04a_job.script
+N=1 qsub hpc24b_ex04a_job.script 
+N=1 qsub hpc24b_ex04a_job.script 3
+N=1 qsub hpc24b_ex04a_job.script
+N=8 qsub hpc24b_ex04a_job.script
+N=8 qsub hpc24b_ex04a_job.script
+qsub hpc24b_ex04a_job.script
+qsub hpc24b_ex04a_job.script
+qsub hpc24b_ex04a_job.script
+qsub hpc24b_ex04a_job.script
+ls
+module available
+clear
+ls
+cd HPC_CMS_2025/
+g++ -o ex04b hpc24b_ex04.cpp -O0 -fopenmp
+g++ -o ex04b hpc24b_ex04.cpp -O0 -fopenmp
+g++ -o ex04b hpc24b_ex04.cpp -O0 -fopenmp
+g++ -o ex04b hpc24b_ex04.cpp -O0 -fopenmp
+g++ -o ex04b hpc24b_ex04.cpp -O0 -fopenmp
+g++ -o ex04b hpc24b_ex04.cpp -O0 -fopenmp
+g++ -o ex04b hpc24b_ex04.cpp -O0 -fopenmp
+ls
+qsub hpc24b_ex04b_job.script 
+git status
+git add .
+git commit -m 'Ex 04 a b'
+g++ -o ex05a hpc24b_ex05a.cpp -O0 -fopenmp
+ls
+qsub hpc24b_ex05a_job.script 
+qsub hpc24b_ex05a_job.script 
+qsub hpc24b_ex05a_job.script 
+g++ -o ex05c hpc24b_ex05c.cpp -O0 -fopenmp
+g++ -o ex05c hpc24b_ex05c.cpp -O0 -fopenmp
+g++ -o ex05c hpc24b_ex05c.cpp -O0 -fopenmp
+g++ -o ex05c hpc24b_ex05c.cpp -O0 -fopenmp
+g++ -o ex05c hpc24b_ex05c.cpp -O0 -fopenmp
+g++ -o ex05c hpc24b_ex05c.cpp -O0 -fopenmp
+g++ -o ex05c hpc24b_ex05c.cpp -O0 -fopenmp
+qsub hpc24b_ex05a_job.script
+g++ -o ex05a hpc24b_ex05a.cpp -O0 -fopenmp
+qsub hpc24b_ex05a_job.script
+g++ -o ex05c hpc24b_ex05c.cpp -O0 -fopenmp
+ls
+qsub hpc24b_ex05c_job.script
+top
+qsub hpc24b_ex05c_job.script
+top
+g++ -o ex05c hpc24b_ex05c.cpp -O0 -fopenmp
+qsub hpc24b_ex05c_job.script
+g++ -o ex05c hpc24b_ex05c.cpp -O0 -fopenmp
+qsub hpc24b_ex05c_job.script
+g++ -o ex05c hpc24b_ex05c.cpp -O0 -fopenmp
+qsub hpc24b_ex05c_job.script
+git status
+git add .
+git commit -m 'Ex 05 Monte Carlo & Matrix Multipilication'
+git push
+cd ..
+git status
+git add .
+git commit -m 'Updated Readme for matrix handling'
+git push
+ls
+cd HPC_CMS_2025/
+ls
+module load gdb
+module spider gdb
+module load gdb/python/gcc/11.3.0/3.10.12
+module load gdb/python/gcc/11.3.0/3.10.12/13.1
+module load gdb/python/gcc/11.4.0/3.11.7/0.14.1
+gcc -g -O hpc24b_ex04.cpp -o ex04_gdb
+g++ -g -O hpc24b_ex04.cpp -o ex04_gdb
+g++ -o ex04_gdb hpc24b_ex04.cpp -O0 -fopenmp
+ls
+gdb ex04_gdb
+g++ -o ex04_gdb hpc24b_ex04.cpp -g -O0 -fopenmp
+gdb ex04_gdb
+g++ -pg -O hpc24b_ex04.cpp -o ex04_gprof
+g++ -pg -O hpc24b_ex04.cpp -o ex04_gprof -fopenmp
+ls
+gprof ex04_gprof 
+g++ -o ex04_gdb hpc24b_ex04.cpp -pg -O0 -fopenmp
+gprof ex04_gprof 
+g++ -o ex04_gdb hpc24b_ex04.cpp -pg -O0
+g++ -o ex04_gprof hpc24b_ex04.cpp -pg -O0 -fopenmp
+gprof ex04_gprof 
+ls
+g++ -o ex04_gprof hpc24b_ex04.cpp -pg -O0
+g++ -o ex04_gprof hpc24b_ex04.cpp -pg -O0 -fopenmp
+ls
+git status
+~/sync/mpich-1.2.5.2/man/man3
+map -l MPI_Isend.3
+man -l MPI_Isend.
+~/sync/
+~
+ls
+cd /sync
+cd HPC_CMS_2025/
+ls
+export OMP_NUM_THREADS=4
+time ./add_vectors_openMP 
+g++ add_vectors_openMP add_vectors_openMP.cpp -O0 -fopenmp
+g++ add_vectors_openMP add_vectors_openMP.cpp -O0 -fopenmp
+g++ add_vectors_openMP add_vectors_openMP.cpp -O0 -fopenmp
+g++ add_vectors_openMP add_vectors_openMP.cpp -O0 -fopenmp
+g++ add_vectors_openMP add_vectors_openMP.cpp -O0 -fopenmp
+g++ add_vectors_openMP add_vectors_openMP.cpp -O0 -fopenmp
+rm add_vectors_openMP
+ls
+g++ add_vectors_openMP add_vectors_openMP.cpp -O0 -fopenmp
+g++ -o add_vectors_openMP add_vectors_openMP.cpp -O0 -fopenmp
+ls
+time ./add_vectors_openMP
+git status
+git add ../README.md ./add_vectors_openMP.cpp 
+git commit -m 'Simple function for vector addition'
+git push
+module load mpic++
+module load openmpi/gcc/11.4.0
+mpicc -o ex07 -i hpc24c_ex07.cpp 
+mpicc -o ex07 hpc24c_ex07.cpp 
+ls
+mpic++ -o ex07 hpc24c_ex07.cpp 
+ls
+mpiexec ex07
+qsub hpc24c_ex07_job.script 
+qsub hpc24c_ex07_job.script 
+mpic++ -o ex07 hpc24c_ex07.cpp 
+qsub hpc24c_ex07_job.script 
+mpic++ -o ex07 hpc24c_ex07.cpp 
+qsub hpc24c_ex07_job.script 
+mpic++ -o ex07 hpc24c_ex07.cpp 
+qsub hpc24c_ex07_job.script 
+mpic++ -o ex07 hpc24c_ex07.cpp 
+qsub hpc24c_ex07_job.script 
+mpic++ -o ex07 hpc24c_ex07.cpp 
+qsub hpc24c_ex07_job.script 
+qsub hpc24c_ex07_job.script 
+mpic++ -o ex07 hpc24c_ex07.cpp 
+qsub hpc24c_ex07_job.script 
+git status
+git add .
+git commit -m "First MPI program"
+git push
+git status
+git add ../README.md 
+git commit -m 'Updated README for MPI program execution"
+
+git commit -m 'Updated README for MPI program execution'
+git push
+mpic++ -o ex08 hpc24c_ex08.cpp 
+mpic++ -o ex08 hpc24c_ex08.cpp 
+mpic++ -o ex08 hpc24c_ex08.cpp 
+ls
+qsub hpc24c_ex08_job.script 
+mpic++ -o ex08 hpc24c_ex08.cpp 
+qsub hpc24c_ex08_job.script 
+top
+mpic++ -o ex08 hpc24c_ex08.cpp 
+qsub hpc24c_ex08_job.script 
+qsub hpc24c_ex08_job.script 
+mpic++ -o ex08 hpc24c_ex08.cpp 
+qsub hpc24c_ex08_job.script 
+mpic++ -o ex08 hpc24c_ex08.cpp 
+mpic++ -o ex08 hpc24c_ex08.cpp 
+mpic++ -o ex08 hpc24c_ex08.cpp 
+qsub hpc24c_ex08_job.script 
+qsub hpc24c_ex08_job.script 
+mpic++ -o ex08 hpc24c_ex08.cpp 
+qsub hpc24c_ex08_job.script 
+mpiexec -n 4  ./ex08
+mpic++ -o ex08 hpc24c_ex08.cpp 
+mpiexec -n 4  ./ex08
+mpic++ -o ex08 hpc24c_ex08.cpp 
+mpiexec -n 4  ./ex08
+mpiexec -n 4  ./ex08
+mpic++ -o ex08 hpc24c_ex08.cpp 
+mpiexec -n 4  ./ex08
+mpic++ -o ex08 hpc24c_ex08.cpp 
+mpiexec -n 4  ./ex08
+mpic++ -o ex08 hpc24c_ex08.cpp 
+mpiexec -n 4  ./ex08
+mpic++ -o ex08 hpc24c_ex08.cpp 
+mpiexec -n 4  ./ex08
+mpic++ -o ex08 hpc24c_ex08.cpp 
+mpiexec -n 4  ./ex08
+mpic++ -o ex08 hpc24c_ex08.cpp 
+mpiexec -n 4  ./ex08
+cd HPC_CMS_2025/
+g++ -o add_vectors_openMP.cpp -O0 -fopenmp
+g++ -o add_vectors_openMP add_vectors_openMP.cpp -O0 -fopenmp
+g++ -o add_vectors_openMP add_vectors_openMP.cpp -O0 -fopenmp
+g++ -o add_vectors_openMP add_vectors_openMP.cpp -O0 -fopenmp
+ls
+ls
+cd HPC_CMS_2025/
+ls
+g++ -o sir_model sir_model.cpp -O0 -fopenmp
+g++ -o sir_model sir_model.cpp -O0 -fopenmp
+ls
+time ./sir_model 
+g++ -o sir_model sir_model.cpp -O0 -fopenmp
+g++ -o sir_model sir_model.cpp -O0 -fopenmp
+time ./sir_model 
+g++ -o sir_model sir_model.cpp -O0 -fopenmp
+time ./sir_model 
+module load python
+module spider python
+module load gdb/python/gcc/11.3.0/3.10.12/13.1
+module spider python
+module load gdb/python/gcc/11.3.0/3.10.12/13.1
+module spider  gdb/python/gcc/11.3.0/3.10.12/13.1
+module load gdb/python/gcc/11.3.0/3.10.12/13.1
+module load python
+module load python/gcc/11.4.0
+python3

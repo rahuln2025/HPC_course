@@ -48,6 +48,10 @@ Follow these commands:
 ```mpic++ -o ex07 hpc24c_ex07.cpp```
 4. After compiling you will get an executable (also called as binary) with the name ```ex07```.
 
+## Running binary executables 
+
+### For OpenMP
+
 #### Running OpenMP binary on login node
 This is not the recommended way to run your HPC executables, especially if they are large computations. 
 1. 
@@ -57,19 +61,10 @@ time ./ex02a # run executable with time tracking
 ```
 2. Your outputs will be printed in the terminal and not stored in a file.
 
-#### Running MPI binary on login node
-This is definitely not the recommended way to run your HPC binaries written with MPI. Prefer this approach for small tests with max 2 processes (n = 2). 
-
-```mpiexec -n 2 ./ex07```
-
-The ```-n 2``` specifies the use of two MPI processes (or two ranks). 
-
-The output will be printed in the terminal and not stored in a file. 
-
 #### Job Script for OpenMP
 The most recommended way to run any HPC executable. 
 1. Making a job.script: explained via example
-```
+```sh
 #!/bin/bash
 
 # name of your job, will be shown in queue
@@ -113,9 +108,33 @@ time ./ex02a
 
 3. In the path specified in job.script, you shall see ```*.out``` and ```*.err``` files generated. These contain your results and error logs. 
 
+4. Sometimes the job script might throw errors like: 
+```-bash: /var/spool/pbs/mom_priv/jobs/990837.mmaster02.SC: /bin/bash^M: Defekter Interpreter: Datei oder Verzeichnis nicht gefunden
+```
+This might be due to the script being interpreted in the Unix system while it has been written in Windows (for e.g. on VSCode on the Windows OS of your laptop)
+
+The next command may help resolve this issue: 
+```sh
+sed -i 's/\r$//' qsub_job.sh 
+```
+
+
+### For MPI
+
+#### Running MPI binary on login node
+This is definitely not the recommended way to run your HPC binaries written with MPI. Prefer this approach for small tests with max 2 processes (n = 2). 
+
+```sh mpiexec -n 2 ./ex07```
+
+The ```-n 2``` specifies the use of two MPI processes (or two ranks). 
+
+The output will be printed in the terminal and not stored in a file. 
+
+
+
 #### Job Script for MPI
 1. It is quite similar to the one for OpenMP.
-```
+```sh
 #!/bin/bash
 
 #PBS -N ex07_output
@@ -189,7 +208,6 @@ for (int i = 0; i < N; ++i) {
 This method allows you to efficiently handle matrices of any size using a single vector, with easy indexing for both reading and writing elements.
 
 You can **print** it using:
-
 ```cpp
 // Print function
 void print(const unsigned long N, const std::vector<double> &a)
@@ -263,9 +281,6 @@ void initialize_matrices( const unsigned long N,
 
 
 **Matrix Multiplication**
-
-
-
 ```cpp
 // Matrix multiplication function
 void multiply_matrices( const unsigned long N, 
@@ -289,7 +304,6 @@ void multiply_matrices( const unsigned long N,
 ```
 
 **Vector Addition & Printing**
-
 ```cpp
 void add_vectors(const unsigned long N, 
                  const std::vector<double> &a,
@@ -313,6 +327,32 @@ void print_vector(const std::vector<double> &v)
 }
 
 ```
+
+# Some MPI Caveats
+
+There are several versions of ```MPI_Send``` and ```MPI_Recv``. Here's a quick summary for them. I am not an expert so feel free to correct if I am wrong here. 
+
+### MPI Send/Receive Commands
+
+| Function   | Blocking/Non-blocking | Description                                                                  |
+| ---------- | --------------------- | ---------------------------------------------------------------------------- |
+| MPI\_Send  | Blocking              | Sends a message and waits until it's delivered to the receiver.              |
+| MPI\_Recv  | Blocking              | Receives a message and waits until the message is received.                  |
+| MPI\_Isend | Non-blocking          | Initiates a send operation and returns immediately.                          |
+| MPI\_Irecv | Non-blocking          | Initiates a receive operation and returns immediately.                       |
+| MPI\_Ssend | Blocking              | Synchronous send that waits until the receiver starts receiving the message. |
+
+
+### MPI Send/Receive Compatibility Table
+
+| Send Type     | Receive Type | Compatible | Remarks                                                    |
+|---------------|--------------|------------|------------------------------------------------------------|
+|**MPI_Send**      | **MPI_Recv**     | Yes        | Commonly used; both blocking and safe if well-ordered.     |
+| MPI_Isend     | MPI_Recv     | Yes        | Non-blocking send with blocking receive; generally safe.   |
+| MPI_Send      | MPI_Irecv    | No         | May cause deadlock if receive is not posted early enough.  |
+| **MPI_Isend**     | **MPI_Irecv**    | Yes        | Both non-blocking; requires synchronization via `MPI_Wait`.|
+| MPI_Ssend     | MPI_Recv     | Yes        | Synchronous; safe if receive is ready.                     |
+| MPI_Ssend     | MPI_Irecv    | No         | Can deadlock; ensure receive is posted before send.        |
 
 
 

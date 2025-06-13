@@ -17,7 +17,7 @@ In my opinion, it is more like a cellular automata problem.
 
 ## Steps for the project: 
 
-1. Try $ p = 0.2, q = 0.3, t = 10$ and start with 5 initial infections at random cells. 
+1. Try $p = 0.2, q = 0.3, t = 10$ and start with 5 initial infections at random cells. 
 2. First, a Python code to implement the problem and get a quick understanding. This code will be sequential. 
 3. Translate Python code to C++, but again sequential in nature. Check if the implementation is correct and add visualization. 
 4. Select a grid size such that the sequential run time is between 100s to 400s. 
@@ -26,3 +26,6 @@ In my opinion, it is more like a cellular automata problem.
     b. For all for loops that will be computed within the MPI ranks, apply OpenMP. 
     c. Keep both versions separately for comparison: only MPI and hybrid.
 6. Perform strong and weak scalability tests. 
+
+### Some glimpses of the results
+

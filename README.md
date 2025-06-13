@@ -109,7 +109,8 @@ time ./ex02a
 3. In the path specified in job.script, you shall see ```*.out``` and ```*.err``` files generated. These contain your results and error logs. 
 
 4. Sometimes the job script might throw errors like: 
-```-bash: /var/spool/pbs/mom_priv/jobs/990837.mmaster02.SC: /bin/bash^M: Defekter Interpreter: Datei oder Verzeichnis nicht gefunden
+```
+-bash: /var/spool/pbs/mom_priv/jobs/990837.mmaster02.SC: /bin/bash^M: Defekter Interpreter: Datei oder Verzeichnis nicht gefunden
 ```
 This might be due to the script being interpreted in the Unix system while it has been written in Windows (for e.g. on VSCode on the Windows OS of your laptop)
 

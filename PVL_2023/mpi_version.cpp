@@ -56,50 +56,68 @@ int main(int argc, char** argv) {
     if (rank == 0) {
         full_grid.resize(grid_size, std::vector<int>(grid_size, SUSCEPTIBLE));
         int initial_infected = 5; // Number of initially infected cells
-        for (int k = 0; k < initial_infected; ++k) {
+        for (int k = 0; k < initial_infected; k++) {
             int x = dist(rng), y = dist(rng);
             // check if the randomly chosen cell is already infected
             while (full_grid[x][y] != SUSCEPTIBLE) {
                 x = dist(rng); y = dist(rng);
             }
+            // Set the randomly chosen cell to infected state
             full_grid[x][y] = INFECTED;
         }
     }
 
     // Scatter the grid to all ranks
     // Flatten for MPI
+    // Using MPI_Scatterv to distribute rows of the grid instead of MPI_Scatter
+    // MPI_Scatterv allows for varying sizes of data to be sent to each rank
+    // Calculate sendcounts and displacements for each rank
+    // sendcounts: number of elements to send to each rank
+    // displacements: starting index for each rank in the flat buffer
     std::vector<int> sendcounts(world_size), displs(world_size);
     int offset = 0;
-    for (int i = 0; i < world_size; ++i) {
-        int rows = rows_per_rank + (i < extra ? 1 : 0);
+    for (int i = 0; i < world_size; i++) {
+        int rows; // number of rows to send to a rank
+        if (i < extra) {
+            rows = rows_per_rank + 1;
+        } else {
+            rows = rows_per_rank;
+        }
+        // Number of elements to send to each rank: n_rows * grid_size
         sendcounts[i] = rows * grid_size;
+        // Positions in the flat buffer where each rank's data starts
+        // displacements: offset for each rank
         displs[i] = offset;
-        offset += sendcounts[i];
+        offset = offset + sendcounts[i];
     }
     std::vector<int> flat_full_grid;
     if (rank == 0) {
-        for (int i = 0; i < grid_size; ++i)
-            for (int j = 0; j < grid_size; ++j)
+        for (int i = 0; i < grid_size; i++)
+            for (int j = 0; j < grid_size; j++)
                 flat_full_grid.push_back(full_grid[i][j]);
     }
     std::vector<int> flat_local_grid(local_rows * grid_size);
     MPI_Scatterv(flat_full_grid.data(), sendcounts.data(), displs.data(), MPI_INT,
                  flat_local_grid.data(), flat_local_grid.size(), MPI_INT, 0, MPI_COMM_WORLD);
+    // MPI_Scatterv(buffer, sendcounts, displacements, datatype, recv_buffer, recv_count, datatype, sending rank, communicator)
+
+
     // Fill local grid from flat
-    for (int i = 0; i < local_rows; ++i)
-        for (int j = 0; j < grid_size; ++j)
+    for (int i = 0; i < local_rows; i++)
+        for (int j = 0; j < grid_size; j++)
             grid[i][j] = flat_local_grid[i * grid_size + j];
 
     // Directions for neighbor checking
     std::vector<std::vector<int>> directions = {{-1,0},{1,0},{0,-1},{0,1}};
 
-    for (int step = 0; step < steps; ++step) {
+    for (int step = 0; step < steps; step++) {
         // Gather full grid for output (optional, only root)
         std::vector<int> flat_gathered_grid;
         if (rank == 0) flat_gathered_grid.resize(grid_size * grid_size);
-        for (int i = 0; i < local_rows; ++i)
-            for (int j = 0; j < grid_size; ++j)
+        for (int i = 0; i < local_rows; i++)
+            for (int j = 0; j < grid_size; j++)
                 flat_local_grid[i * grid_size + j] = grid[i][j];
+        // Gather all local grids into the root rank
         MPI_Gatherv(flat_local_grid.data(), flat_local_grid.size(), MPI_INT,
                     flat_gathered_grid.data(), sendcounts.data(), displs.data(), MPI_INT,
                     0, MPI_COMM_WORLD);
@@ -117,22 +135,22 @@ int main(int argc, char** argv) {
         if (local_rows > 0) {
             // Send top row to previous rank, receive bottom ghost row from previous
             if (rank > 0) {
-                for (int j = 0; j < grid_size; ++j) top_row[j] = grid[0][j];
+                for (int j = 0; j < grid_size; j++) top_row[j] = grid[0][j];
                 MPI_Sendrecv(top_row.data(), grid_size, MPI_INT, rank - 1, 0,
                              recv_top.data(), grid_size, MPI_INT, rank - 1, 1,
                              MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             }
             // Send bottom row to next rank, receive top ghost row from next
             if (rank < world_size - 1) {
-                for (int j = 0; j < grid_size; ++j) bottom_row[j] = grid[local_rows - 1][j];
+                for (int j = 0; j < grid_size; j++) bottom_row[j] = grid[local_rows - 1][j];
                 MPI_Sendrecv(bottom_row.data(), grid_size, MPI_INT, rank + 1, 1,
                              recv_bottom.data(), grid_size, MPI_INT, rank + 1, 0,
                              MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             }
         }
 
-        for (int i = 0; i < local_rows; ++i) {
-            for (int j = 0; j < grid_size; ++j) {
+        for (int i = 0; i < local_rows; i++) {
+            for (int j = 0; j < grid_size; j++) {
                 if (grid[i][j] == INFECTED) {
                     for (int d = 0; d < directions.size(); d++) {
                         int ni = i + directions[d][0];
@@ -174,7 +192,7 @@ int main(int argc, char** argv) {
     if (rank == 0) {
         std::ofstream outfile("sir_MPI_output.txt");
         for (const auto& row : output_matrix) {
-            for (size_t i = 0; i < row.size(); ++i) {
+            for (size_t i = 0; i < row.size(); i++) {
                 outfile << row[i];
                 if (i < row.size() - 1) outfile << " ";
             }

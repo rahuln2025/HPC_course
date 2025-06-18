@@ -173,6 +173,9 @@ std::vector<double> a(N * N);
 
 Each element of the matrix can be accessed using the formula `a[i * N + j]`, where `i` is the row index and `j` is the column index. This is known as **row-major order** storage.
 
+For more information about the vector class and its commands, see [vector class info](https://cplusplus.com/reference/vector/vector/).
+
+
 #### Example: 3x3 matrix
 
 Suppose you want to store this 3x3 matrix:

@@ -5,10 +5,10 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 # Parameters (must match your C++ simulation)
-grid_size = 500  # Change if your grid size is different
+grid_size = 10  # Change if your grid size is different
 
 # Read sir_output.txt
-with open("sir_MPI_output.txt", "r") as f:
+with open("sir_MPI_v0_output.txt", "r") as f:
     data = [list(map(int, line.strip().split())) for line in f]
 
 steps = len(data)
@@ -29,4 +29,4 @@ def update(frame):
     return [im]
 
 ani = animation.FuncAnimation(fig, update, frames=steps, interval=10, blit=True)
-ani.save("sir_simulation_MPI_output.gif", fps=10)
+ani.save("sir_simulation_MPI_v0_output.gif", fps=10)

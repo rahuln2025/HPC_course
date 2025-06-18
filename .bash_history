@@ -1,283 +1,3 @@
-nano job.script
-#1734551477
-qsub job.script
-#1734551495
-qstat
-#1734551498
-ls
-#1734551507
-qstat
-#1734551526
-less job.script 
-#1734551537
-ls
-#1734551546
-qstat
-#1734551547
-ls
-#1734551559
-nano job.script
-#1734551617
-ls
-#1734551629
-qsub job.script
-#1734551632
-qstat
-#1734551687
-ls
-#1734551693
-cd ..
-#1734551694
-ls
-#1734551705
-cd HPC_CMS_202425/
-#1734551706
-ls
-#1734551715
-cd ..
-#1734551717
-ls 
-#1734551721
-cd PVL_202425/
-#1734551723
-ls
-#1734551733
-less job.script
-#1734551834
-nano job.script
-#1734551866
-qsub job.script
-#1734551873
-less hpc_24a_ex01.out
-#1734551882
-less hpc_24a_ex01.err
-#1734551908
-qstat
-#1734551915
-mpiexec -n 2 PVL2_2
-#1734552063
-qstat
-#1734552064
-ls
-#1734552072
-less PVL2_output.out 
-#1734552097
-nano job.script
-#1734552115
-mpiexec -n 2 PVL2_2
-#1734552141
-qsub job.script
-#1734552350
-qstat
-#1734552353
-ls
-#1734552362
-less PVL2_output.out 
-#1734552382
-nano job.script
-#1734552442
-qsub -I -q teachinq
-#1734552445
-qsub -I -q teachingq
-#1734552595
-pwd
-#1734552604
-nano job.script
-#1734552629
-qsub job.script
-#1734552636
-qstat
-#1734552700
-ls
-#1734552706
-less PVL2_output.out
-#1734552725
-qsub -I -q teachingq
-#1734552825
-ls
-#1734552830
-less PVL2_2
-#1734552839
-less PVL2.C
-#1734553006
-nano PVL2.C
-#1734553077
-mpicc -o PVL2_3 PVL2.C
-#1734553085
-mpiexec -n 2 PVL2_3
-#1734553153
-less PVL2_output.err
-#1734553184
-nano job.script
-#1734553249
-qsub job.script
-#1734553252
-qstat
-#1734553302
-ls
-#1734553306
-qstat
-#1734553350
-ls
-#1734553358
-less PVL2_output.out
-#1734553369
-less PVL2_output.err
-#1734553470
-less job.script
-#1734553502
-nano job.script
-#1734553567
-qsub job.script
-#1734553641
-qstat
-#1734553643
-ls
-#1734553653
-less PVL2_output.out
-#1734553689
-nano job.script
-#1734553708
-cp PVL2_2 ~/
-#1734553709
-ls
-#1734553710
-cd ..
-#1734553711
-ls
-#1734553718
-cd PVL_202425/
-#1734553725
-qsub job.script
-#1734553740
-qstat
-#1734553795
-ls
-#1734553803
-less PVL2_output.out
-#1734553858
-nano job.script 
-#1734553876
-qsub job.script
-#1734553918
-qstat
-#1734553968
-ls
-#1734553974
-less PVL2_output.out
-#1734553986
-nano job.script
-#1734554071
-less PVL2_output.err
-#1734554086
-less job.script
-#1734554126
-qsub job.script
-#1734554418
-ls
-#1734554429
-less PVL_output.out
-#1734554436
-less PVL2_output.out
-#1734554456
-nano job.script
-#1734554495
-less job.script
-#1734554531
-qsub job.script
-#1734554656
-qstat
-#1734554660
-ls
-#1734554666
-less PVL2_output.out
-#1734554690
-less PVL2_output.err
-#1748499562
-ls
-#1748500174
-git init
-#1748500188
-ls
-#1748500196
-git status
-#1748500205
-git add .
-#1748500213
-git status
-#1748500232
-git commit -m Â'adding all old files from cluster'
-#1748500238
-git init
-#1748500244
-git status
-#1748500305
-git remote add origin https://github.com/rahuln2025/HPC_course.git
-#1748500313
-git push -u origin master
-#1748500582
-git status
-ls
-pwd
-cd HPC_CMS_202425/
-ls
-pwd
-#1749240883
-ls
-ls
-pwd
-pwd
-ls
-cd HPC_CMS
-ls
-cd ..
-pwd
-cd HPC_CMS_Home/
-ls
-pwd
-pwd
-ls
-cd PVL_202425/
-ls
-cd PVL2
-cd PVL2_3
-ls -al
-less job.script 
-cd ..
-less .nanorc
-ls -al
-nano .bashrc
-nano
-clear
-ls /usr/share/nano
-less ~/.nanorc
-cd ~
-ls
-cat ~/.nanorc
-ls -l
-pwd
-ls
-pwd
-ls
-mkdir HPC_CMS_2025
-cd HPC_CMS
-cd ..
-cd HPC_CMS_2025
-git status
-cd ..
-cd PBS_O_WORKDIR
-cd $HOME/HPC_CMS_2025
-echo "Run on login node for testing"
-export OMP_NUM_THREADS=4
-time ./hello-openmp 
-time ./hello-openmp 
-time ./hello-openmp
-qsub hpc24a_ex02_job.script 
-qsub hpc24a_ex02_job.script 
-export OMP_NUM_THREADS=4
-time ./ex02a 
-qsub hpc24a_ex02a_job.script 
-qsub hpc24a_ex02a_job.script
 qsub hpc24a_ex02a_job.script
 pwd
 git status
@@ -608,3 +328,173 @@ module load gdb/python/gcc/11.3.0/3.10.12/13.1
 module load python
 module load python/gcc/11.4.0
 python3
+ls
+cd HPC_CMS_2025/
+module load openmpi/gcc/11.4.0
+mpic++ -o ex10 hpc24d_ex10.cpp 
+mpic++ -o ex10 hpc24d_ex10.cpp 
+ls
+qsub hpc24d_ex10_job.script 
+cd ..
+ls
+mkdir PVL_2023
+ls
+cd PVL_2-23
+cd PVL_2023
+touch README.md
+module spider Python
+module load  gdb/python/gcc/11.4.0/3.11.7
+python3 seq.py
+module spider numpy
+pip install --user pipenv
+python3
+pip
+which python
+module load  gdb/python/gcc/11.4.0/3.11.7
+which python
+python --version
+python3 --version
+module load python/gcc/11.4.0
+which python
+python3 seq.py
+python3 seq.py
+python3 seq.py
+python3 seq.py
+python3 seq.py
+find -name '*.png' -delete
+ls
+python3 seq.py
+mkdir py_images
+python3 seq.py
+python3 seq.py
+python3 seq.py
+python3 seq.py
+python3 seq.py
+python3 seq.py
+python3 seq.py
+python3 seq.py
+g++ -o seq seq.cpp
+g++ -o seq seq.cpp
+g++ -o seq seq.cpp
+g++ -o seq seq.cpp
+g++ -o seq seq.cpp
+g++ -o seq seq.cpp
+g++ -o seq seq.cpp
+g++ -o seq seq.cpp
+g++ -o seq seq.cpp
+time ./seq
+time ./seq
+time ./seq
+g++ -o seq seq.cpp
+time ./seq
+time ./seq
+ls
+mpic++ -o seq_MPI mpi_version.cpp 
+time mpiexec -n 2 seq_MPI
+ls
+less sir_MPI_output.txt 
+python3 visualization.py 
+python3 visualization.py 
+g++ -o seq seq.cpp
+time ./seq
+python3 visualization.py 
+g++ -o seq seq.cpp
+time ./seq
+python3 visualization.py 
+
+g++ -o seq seq.cpp
+g++ -o seq seq.cpp
+g++ -o seq seq.cpp
+g++ -o seq seq.cpp
+time ./seq
+python3 visualization.py 
+python3 visualization.py 
+python3 visualization.py 
+python3 visualization.py 
+g++ -o seq seq.cpp
+g++ -o seq seq.cpp
+time ./seq
+mpic++ -o mpi_5000_1000 mpi_version.cpp 
+ls
+qsub mpi_job.script 
+qsub mpi_job.script
+pwd
+mpic++ -o mpi_5000_1000 mpi_version.cpp
+qsub mpi_job.script
+mpiexec -n 2 mpi_5000_1000
+ps
+mpic++ -o mpi_500_100 mpi_version.cpp 
+ls
+time mpiexec -n 4 mpi_500_100 
+qsub job.script
+qsub job.script
+qsub qsub_job.sh 
+echo $HOME/PVL_2023
+qsub qsub_job.sh 
+sed -i 's/\r$//' qsub_job.sh 
+qsub qsub_job.sh 
+cd ..
+git status
+git add .
+git add .
+git status
+git status
+git add .
+git commit -m 'New MPI exercises, small updates to README.md, PVL solution in progress'
+git push
+ls
+git status
+git add README.md 
+git commit -m 'updated README.md'
+git push
+git status
+git add README.md 
+git add .
+git commit -m 'updated README.md'
+git push
+git status
+git add .
+git commit -m 'commenting MPI PVL code'
+cd PVL_2023/
+mpic++ -o mpi_v2 mpi_version_2.cpp 
+module load openmpi/gcc/11.4.0
+mpic++ -o mpi_v2 mpi_version_2.cpp 
+mpic++ -o mpi_v2 mpi_version_2.cpp 
+time mpiexec -n 2 mpi_v2
+time mpiexec -n 2 mpi_v2
+git status
+ls
+git status
+cd PVL_2023/
+module load openmpi/gcc/11.4.0
+ls
+mkdir void_versions
+ls
+mv mpi_version_2.cpp ./void_versions/
+ls
+find -name *.cpp*
+find -name '*.cpp'
+mkdir void_txts
+mv sir_output.txt sir_output2.txt sir_output_1000_500.txt sir_output_5000_1000.txt sir_MPI_output.txt ./void_txts/
+ls
+mkdir void_gifs
+find -name '*.gif' | mv xargs ./void_gifs/
+find -name '*.gif' | xargs mv ./void_gifs/
+find -name '*.gif' | xargs mv * ./void_gifs/
+find . -name '*.gif' -print0
+find . -name '*.gif' -print
+find . -name '*.gif' -print0 | xargs -0
+find . -name '*.gif' -print0 | xargs -0 echo
+find . -name '*.gif' -print0 | xargs -0 echo -t
+find . -name '*.gif' -print0 | xargs -0 -t ./void_gifs/
+find . -name '*.gif' -print0 | xargs -0 -t ./void_gifs
+ls
+mpiexec -o mpi_v0_5_10 mpi_version_0.cpp
+mpic++ -o mpi_v0_5_10 mpi_version_0.cpp
+mpic++ -o mpi_v0_5_10 mpi_version_0.cpp
+mpic++ -o mpi_v0_5_10 mpi_version_0.cpp
+ls
+mpic++ -o mpi_v0_5_10 mpi_version_0.cpp
+mpiexec -n 4 mpi_v0_5_10 
+module load python/gcc/11.4.0
+python3 visualization.py 

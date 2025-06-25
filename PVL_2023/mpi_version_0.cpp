@@ -19,12 +19,12 @@ int main(int argc, char** argv) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     // Parameters
-    const int grid_size = 10; // Size of the grid
-    const int steps = 10; // Number of simulation steps
+    const int grid_size = 500; // Size of the grid
+    const int steps = 1000; // Number of simulation steps
     const double p = 0.5; // probability of infection
     const double q = 0.3; // probability of recovery
     const int t = 5;     // immune period
-    std::string output_file = "v0_output_50_10.txt"; // output file name
+    
 
     // Random number generation
     std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
@@ -36,9 +36,9 @@ int main(int argc, char** argv) {
     int initial_infected = 5;
     
     // Randomly infect cells (done by rank 0)
-            // Grid and immune period
-        std::vector<std::vector<int>> full_grid(grid_size, std::vector<int>(grid_size, SUSCEPTIBLE));
-        std::vector<std::vector<int>> full_immune_period(grid_size, std::vector<int>(grid_size, 0)); // possibly redundant
+    // Grid and immune period
+    std::vector<std::vector<int>> full_grid(grid_size, std::vector<int>(grid_size, SUSCEPTIBLE));
+    std::vector<std::vector<int>> full_immune_period(grid_size, std::vector<int>(grid_size, 0)); // possibly redundant
     if (rank == 0) {
         for (int k = 0; k < initial_infected; ++k) {
             int x = dist(rng), y = dist(rng);
@@ -163,16 +163,18 @@ int main(int argc, char** argv) {
                     top_row[j] = local_grid[0][j];
                 }
                 MPI_Sendrecv(top_row.data(), grid_size, MPI_INT, rank - 1, 0,
-                             recv_top.data(), grid_size, MPI_INT, rank - 1, 1,
+                             recv_top.data(), grid_size, MPI_INT, rank - 1, 0,
                              MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            }
+                //}
+        }
             if (rank < size - 1) { // rank size - 1 is the last one, and it does not have a bottom row to send to next rank
                 for (int j = 0; j < grid_size; ++j) {
                     bottom_row[j] = local_grid[local_rows - 1][j];
                 }
-                MPI_Sendrecv(bottom_row.data(), grid_size, MPI_INT, rank + 1, 1,
+                MPI_Sendrecv(bottom_row.data(), grid_size, MPI_INT, rank + 1, 0,
                              recv_bottom.data(), grid_size, MPI_INT, rank + 1, 0,
                              MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                //}
             }
         }
 
@@ -224,8 +226,10 @@ int main(int argc, char** argv) {
 
 
     // Save output_matrix to a .txt file (only root)
+
     if (rank == 0) {
-        std::ofstream outfile("sir_MPI_v0_output.txt");
+        std::string output_file = "MPI_v0_500_1000_output.txt"; // output file name
+        std::ofstream outfile(output_file);
         for (const auto& row : output_matrix) {
             for (size_t i = 0; i < row.size(); i++) {
                 outfile << row[i];
@@ -234,7 +238,7 @@ int main(int argc, char** argv) {
             outfile << "\n";
         }
         outfile.close();
-        std::cout << "Simulation complete. Output saved to sir_MPI_v0_output.txt\n";
+        std::cout << "Simulation complete. Output saved to "<< output_file <<"\n";
     }
 
     // Finalize MPI

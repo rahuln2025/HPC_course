@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     const int grid_size = 500;
-    const int steps = 100;
+    const int steps = 1000;
     const double p = 0.5; // Infection probability
     const double q = 0.3; // Recovery probability
     const int t = 5;
@@ -190,7 +190,7 @@ int main(int argc, char** argv) {
 
     // Save output_matrix to a .txt file (only root)
     if (rank == 0) {
-        std::ofstream outfile("sir_MPI_output.txt");
+        std::ofstream outfile("sir_MPI_500_1000_output.txt");
         for (const auto& row : output_matrix) {
             for (size_t i = 0; i < row.size(); i++) {
                 outfile << row[i];
@@ -199,7 +199,7 @@ int main(int argc, char** argv) {
             outfile << "\n";
         }
         outfile.close();
-        std::cout << "Simulation complete. Output saved to sir_MPI_output.txt\n";
+        std::cout << "Simulation complete. Output saved to sir_MPI_500_1000_output.txt\n";
     }
 
     MPI_Finalize();

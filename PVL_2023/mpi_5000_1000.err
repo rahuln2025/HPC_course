@@ -1,1 +1,10 @@
--bash: /var/spool/pbs/mom_priv/jobs/990837.mmaster02.SC: /bin/bash^M: Defekter Interpreter: Datei oder Verzeichnis nicht gefunden
+--------------------------------------------------------------------------
+prterun noticed that process rank 1 with PID 2368030 on node mfatnode004 exited on
+signal 9 (Killed).
+--------------------------------------------------------------------------
+
+real	0m2,336s
+user	0m0,715s
+sys	0m1,117s
+Cgroup mem limit exceeded: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=1004458.mmaster02,mems_allowed=0-3,oom_memcg=/pbspro.service/jobid/1004458.mmaster02,task_memcg=/pbspro.service/jobid/1004458.mmaster02,task=mpi_5000_1000,pid=2368030,uid=49310
+

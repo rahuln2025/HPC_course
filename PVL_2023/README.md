@@ -29,3 +29,21 @@ In my opinion, it is more like a cellular automata problem.
 
 ### Some glimpses of the results
 
+### Banded Rows issue
+
+To fix the "banded output" issue caused by improper ghost row handling, I took these steps:
+
+Tracked Infection Attempts Across Boundaries:
+I introduced two buffers, infect_top and infect_bottom, to record when an infection should spread into a neighboring rank’s ghost row (i.e., when a cell at the edge of a local grid tries to infect a cell just outside its boundary).
+
+Marked Ghost Row Infections During Update:
+During the infection loop, if an infection would spread into a ghost row (above the first row or below the last row of the local grid), I set the corresponding entry in infect_top or infect_bottom to 1.
+
+Exchanged Infection Buffers With Neighbors:
+After the main update loop, I used MPI_Sendrecv to exchange the infect_top and infect_bottom buffers with neighboring ranks. This way, each rank receives information about which of its edge cells should become infected due to neighbor activity.
+
+Applied Received Infections to Edge Rows:
+After receiving infection buffers from neighbors, I updated the first and last rows of the local grid accordingly, setting cells to INFECTED if the received buffer indicated an infection and the cell was still SUSCEPTIBLE.
+
+Result:
+This ensures that infections propagate across rank boundaries in the same simulation step, eliminating the artificial "banded" pattern and producing a smooth, physically correct spread.

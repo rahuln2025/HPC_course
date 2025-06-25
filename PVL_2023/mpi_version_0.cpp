@@ -163,7 +163,7 @@ int main(int argc, char** argv) {
                     top_row[j] = local_grid[0][j];
                 }
                 MPI_Sendrecv(top_row.data(), grid_size, MPI_INT, rank - 1, 0,
-                             recv_top.data(), grid_size, MPI_INT, rank - 1, 0,
+                             recv_top.data(), grid_size, MPI_INT, rank - 1, 1,
                              MPI_COMM_WORLD, MPI_STATUS_IGNORE);
                 //}
         }
@@ -171,13 +171,17 @@ int main(int argc, char** argv) {
                 for (int j = 0; j < grid_size; ++j) {
                     bottom_row[j] = local_grid[local_rows - 1][j];
                 }
-                MPI_Sendrecv(bottom_row.data(), grid_size, MPI_INT, rank + 1, 0,
+                MPI_Sendrecv(bottom_row.data(), grid_size, MPI_INT, rank + 1, 1,
                              recv_bottom.data(), grid_size, MPI_INT, rank + 1, 0,
                              MPI_COMM_WORLD, MPI_STATUS_IGNORE);
                 //}
             }
         }
 
+        // --- Begin ghost row infection 
+        std::vector<int> infect_top(grid_size, 0);    // To send to top neighbor
+        std::vector<int> infect_bottom(grid_size, 0); // To send to bottom neighbor
+        // --- End ghost row infection 
  
        for (int i = 0; i < local_rows; i++) {
             for (int j = 0; j < grid_size; j++) {
@@ -204,7 +208,14 @@ int main(int argc, char** argv) {
                             if (ni >= 0 && ni < local_rows && nj >= 0 && nj < grid_size) {
                                 new_local_grid[ni][nj] = INFECTED;
                             }
-                            // Ghost rows are not updated, but infection will propagate next step
+                            // --- Begin ghost row infection fix ---
+                            else if (ni == -1 && rank > 0 && nj >= 0 && nj < grid_size) {
+                                infect_top[nj] = 1; // Mark infection for top neighbor
+                            }
+                            else if (ni == local_rows && rank < size - 1 && nj >= 0 && nj < grid_size) {
+                                infect_bottom[nj] = 1; // Mark infection for bottom neighbor
+                            }
+                            // --- End ghost row infection fix ---
                         }
                     }
                     // Attempt to recover
@@ -220,6 +231,37 @@ int main(int argc, char** argv) {
                 }
             }
         }
+        // --- Begin ghost row infection fix ---
+        // Exchange infection info with neighbors
+        std::vector<int> recv_infect_top(grid_size, 0), recv_infect_bottom(grid_size, 0);
+
+        if (rank > 0) {
+            MPI_Sendrecv(infect_top.data(), grid_size, MPI_INT, rank - 1, 1,
+                         recv_infect_top.data(), grid_size, MPI_INT, rank - 1, 2,
+                         MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        }
+        if (rank < size - 1) {
+            MPI_Sendrecv(infect_bottom.data(), grid_size, MPI_INT, rank + 1, 2,
+                         recv_infect_bottom.data(), grid_size, MPI_INT, rank + 1, 1,
+                         MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        }
+
+        // Apply received infections to edge rows
+        if (rank > 0) {
+            for (int j = 0; j < grid_size; ++j) {
+                if (recv_infect_top[j] && new_local_grid[0][j] == SUSCEPTIBLE) {
+                    new_local_grid[0][j] = INFECTED;
+                }
+            }
+        }
+        if (rank < size - 1) {
+            for (int j = 0; j < grid_size; ++j) {
+                if (recv_infect_bottom[j] && new_local_grid[local_rows - 1][j] == SUSCEPTIBLE) {
+                    new_local_grid[local_rows - 1][j] = INFECTED;
+                }
+            }
+        }
+        // --- End ghost row infection fix ---
         local_grid = new_local_grid;
         local_immune_period = new_local_immune_period;
     }

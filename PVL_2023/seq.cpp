@@ -9,12 +9,12 @@ enum State { SUSCEPTIBLE = 0, INFECTED = 2, RECOVERED = 1 };
 
 int main() {
     // Parameters
-    const int grid_size = 5000; // Size of the grid
+    const int grid_size = 2000; // Size of the grid
     const int steps = 1000; // Number of simulation steps
     const double p = 0.5; // probability of infection
     const double q = 0.3; // probability of recovery
     const int t = 5;     // immune period
-    std::string output_file = "sir_output_5000_1000.txt";
+    std::string output_file = "seq_output_2000_1000.txt";
 
     // Random number generation
     std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
@@ -47,8 +47,11 @@ int main() {
         for (int i = 0; i < grid_size; ++i)
             for (int j = 0; j < grid_size; ++j)
                 flat_grid.push_back(grid[i][j]);
+        if (step % 100 == 0) {
+            std::cout << "Step " << step << " completed.\n";
+        
         output_matrix.push_back(flat_grid);
-
+        }
         // Copy grid for simultaneous updates
         auto new_grid = grid;
         auto new_immune = immune_period;

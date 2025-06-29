@@ -47,3 +47,100 @@ After receiving infection buffers from neighbors, I updated the first and last r
 
 Result:
 This ensures that infections propagate across rank boundaries in the same simulation step, eliminating the artificial "banded" pattern and producing a smooth, physically correct spread.
+
+### Pseudocode
+
+#### initialization
+
+```sql
+Initialize MPI
+Get rank and size
+Parse command-line arguments: grid_size, steps, infection_prob (p), recovery_prob (q), immunity_duration (t)
+
+Divide the grid among MPI ranks:
+    local_rows = grid_size / number_of_ranks
+    Allocate local_grid[local_rows][grid_size]
+    Allocate local_immune_period[local_rows][grid_size]
+
+Initialize local_grid with initial infected state (e.g., a central infection)
+Initialize output_matrix if rank == 0
+```
+
+#### main simulation loop
+``` sql
+
+directions = [(−1,0), (1,0), (0,−1), (0,1)] // Up, Down, Left, Right
+
+for step in 0 to steps-1:
+    
+    // --------- Collect and Gather Data (for output) ---------
+    Flatten local_grid to flat_local_grid
+    Gather all local grids to flat_gathered_grid on root (MPI_Gatherv)
+
+    if rank == 0 and step % 100 == 0:
+        Append flat_gathered_grid to output_matrix
+
+    // --------- Initialize Grid Copies for Updates ---------
+    new_local_grid = local_grid
+    new_local_immune_period = local_immune_period
+
+    // --------- Exchange Ghost Rows ---------
+    if rank > 0:
+        Send top row to rank-1 and receive its bottom row as recv_top
+
+    if rank < size-1:
+        Send bottom row to rank+1 and receive its top row as recv_bottom
+
+    // --------- Initialize Infection Flags for Ghosts ---------
+    infect_top = [0] * grid_size
+    infect_bottom = [0] * grid_size
+
+    // --------- Loop Over Local Grid ---------
+    for i in 0 to local_rows-1:
+        for j in 0 to grid_size-1:
+
+            if cell is INFECTED:
+                For each direction (ni, nj):
+                    if neighbor is inside local_grid:
+                        get neighbor_val
+                    else if neighbor is in recv_top or recv_bottom:
+                        get neighbor_val
+
+                    if neighbor_val is SUSCEPTIBLE and random < p:
+                        Infect it in new_local_grid or mark in infect_top / infect_bottom
+
+                if random < q:
+                    Recover current cell and set immune period
+
+            else if cell is RECOVERED:
+                Decrease immune counter
+                If immune period is over → become SUSCEPTIBLE
+
+    // --------- Exchange Infection Flags ---------
+    if rank > 0:
+        Send infect_top to rank-1 and receive recv_infect_top from rank-1
+
+    if rank < size-1:
+        Send infect_bottom to rank+1 and receive recv_infect_bottom from rank+1
+
+    // --------- Apply Received Ghost Infections ---------
+    if rank > 0:
+        Infect top row from recv_infect_top if cell was SUSCEPTIBLE
+
+    if rank < size-1:
+        Infect bottom row from recv_infect_bottom if cell was SUSCEPTIBLE
+
+    // --------- Finalize Step ---------
+    local_grid = new_local_grid
+    local_immune_period = new_local_immune_period
+```
+
+#### save output
+
+```sql
+if rank == 0:
+    Write output_matrix to text file ("MPI_v0_1000_1000_output.txt")
+
+Finalize MPI
+return 0
+```

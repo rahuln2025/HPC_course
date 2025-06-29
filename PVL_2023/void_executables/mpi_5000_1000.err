@@ -1,0 +1,10 @@
+--------------------------------------------------------------------------
+prterun noticed that process rank 2 with PID 3175369 on node mfatnode004 exited on
+signal 9 (Killed).
+--------------------------------------------------------------------------
+
+real	0m2,551s
+user	0m0,212s
+sys	0m2,693s
+Cgroup mem limit exceeded: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=1008309.mmaster02,mems_allowed=0-3,oom_memcg=/pbspro.service/jobid/1008309.mmaster02,task_memcg=/pbspro.service/jobid/1008309.mmaster02,task=mpi_5000_1000,pid=3175371,uid=49310
+

@@ -1,4 +1,4 @@
-Job started from /home/rn14pyry/pbs.1008388.mmaster02.x8z
+Job started from /home/rn14pyry/pbs.1008460.mmaster02.x8z
 Running in directory /home/rn14pyry/PVL_2023
 OMP_NUM_THREADS = 8
 Step 0:
@@ -11,4 +11,4 @@ Step 600:
 Step 700:
 Step 800:
 Step 900:
-Simulation complete. Output saved to MPI_v3_4000_1000_output.txt
+Simulation complete. Output saved to Hybrid_v0_4000_1000_output.txt

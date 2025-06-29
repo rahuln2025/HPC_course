@@ -110,7 +110,7 @@ int main(int argc, char** argv) {
     std::vector<int> flat_full_grid; // leave it empty
     if (rank == 0) {
         flat_full_grid.reserve(grid_size * grid_size); // reserve memory
-        
+        #pragma omp parallel for 
         for (int i = 0; i < grid_size; i++)
             for (int j = 0; j < grid_size; j++)
                 flat_full_grid.push_back(full_grid[i][j]); // correctly flatten
@@ -129,7 +129,7 @@ int main(int argc, char** argv) {
     // }
 
     // Reconstruct local grid for each rank from flat local grids
-    
+    #pragma omp parallel for
     for (int i = 0; i < local_rows; i++)
         for (int j = 0; j < grid_size; j++)
             local_grid[i][j] = flat_local_grid[i * grid_size + j];
@@ -149,13 +149,13 @@ int main(int argc, char** argv) {
     // std::vector<std::vector<int>> new_local_grid(local_rows, std::vector<int>(grid_size, SUSCEPTIBLE));
     // std::vector<std::vector<int>> new_local_immune_period(local_rows, std::vector<int>(grid_size, 0));
 
-    // Derive a base_seed per rank for reproducible thread‑local RNGs
-    unsigned base_seed = static_cast<unsigned>(
-        std::chrono::steady_clock::now().time_since_epoch().count()
-    ) ^ static_cast<unsigned>(rank);
+    // // Derive a base_seed per rank for reproducible thread‑local RNGs
+    // unsigned base_seed = static_cast<unsigned>(
+    //     std::chrono::steady_clock::now().time_since_epoch().count()
+    // ) ^ static_cast<unsigned>(rank);
 
-    // Broadcast base_seed so all ranks deterministic (if desired)
-    MPI_Bcast(&base_seed, 1, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
+    // // Broadcast base_seed so all ranks deterministic (if desired)
+    // MPI_Bcast(&base_seed, 1, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
 
     // Simulation loop
     for (int step = 0; step < steps; ++step) {
@@ -163,7 +163,7 @@ int main(int argc, char** argv) {
 
         // --- Collection and storing output for each iteration ---
         // Collect flat local grid for gathering from all ranks
-        
+        #pragma omp parallel for
         for (int i = 0; i< local_rows; ++i){
             for (int j = 0; j < grid_size; ++j){
                 flat_local_grid[i * grid_size + j] = local_grid[i][j];
@@ -227,9 +227,9 @@ int main(int argc, char** argv) {
         // --- Infection and recovery loop ---
         #pragma omp parallel default(shared)
         {
-            int tid = omp_get_thread_num();
-            std::mt19937 thread_rng(base_seed + tid);
-            std::uniform_real_distribution<double> thread_prob(0.0, 1.0);
+        //     int tid = omp_get_thread_num();
+        //     std::mt19937 thread_rng(base_seed + tid);
+        //     std::uniform_real_distribution<double> thread_prob(0.0, 1.0);
 
             #pragma omp for schedule(static)
             for (int i = 0; i < local_rows; i++) {
@@ -257,7 +257,7 @@ int main(int argc, char** argv) {
                             }
 
                             // If neighbor is susceptible, attempt to infect
-                            if (neighbor_val == SUSCEPTIBLE && thread_prob(thread_rng) < p) {
+                            if (neighbor_val == SUSCEPTIBLE && prob(rng) < p) {
                                 if (ni >= 0 && ni < local_rows && nj >= 0 && nj < grid_size) {
                                     new_local_grid[ni][nj] = INFECTED;
                                 }
@@ -272,7 +272,7 @@ int main(int argc, char** argv) {
                         }
                         // Attempt to recover an infected cell and manage immune period
                         // If the cell is infected, it can recover with probability q
-                        if (thread_prob(thread_rng) < q) {
+                        if (prob(rng) < q) {
                             new_local_grid[i][j] = RECOVERED;
                             new_local_immune_period[i][j] = t;
                         }
@@ -309,7 +309,7 @@ int main(int argc, char** argv) {
 
         // Apply received infections to edge rows
         if (rank > 0) {
-            
+            #pragma omp parallel for
             for (int j = 0; j < grid_size; ++j) {
                 if (recv_infect_top[j] == INFECTED && new_local_grid[0][j] == SUSCEPTIBLE) {
                     new_local_grid[0][j] = INFECTED;
@@ -317,7 +317,7 @@ int main(int argc, char** argv) {
             }
         }
         if (rank < size - 1) {
-            
+            #pragma omp parallel for
             for (int j = 0; j < grid_size; ++j) {
                 if (recv_infect_bottom[j] == INFECTED && new_local_grid[local_rows - 1][j] == SUSCEPTIBLE) {
                     new_local_grid[local_rows - 1][j] = INFECTED;

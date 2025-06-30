@@ -1,0 +1,16 @@
+Job started from /home/rn14pyry/pbs.1009786.mmaster02.x8z
+Running in directory /home/rn14pyry/PVL_2023
+select=1:ncpus=8:mpiprocs=2:mem=128gb
+MPI Only Weak Scalability Test W2 with 2 ranks and 8 cores
+OMP_NUM_THREADS = 1
+Step 0:
+Step 100:
+Step 200:
+Step 300:
+Step 400:
+Step 500:
+Step 600:
+Step 700:
+Step 800:
+Step 900:
+Simulation complete. Output saved to Hybrid_v0_W2_1414_1000_output.txt

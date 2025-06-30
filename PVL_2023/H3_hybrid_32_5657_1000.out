@@ -1,0 +1,16 @@
+Job started from /home/rn14pyry/pbs.1009826.mmaster02.x8z
+Running in directory /home/rn14pyry/PVL_2023
+select=4:ncpus=8:mpiprocs=1:mem=32gb
+Hybrid Weak Scalability Test H3 with 4 ranks and 32 cores
+OMP_NUM_THREADS = 8
+Step 0:
+Step 100:
+Step 200:
+Step 300:
+Step 400:
+Step 500:
+Step 600:
+Step 700:
+Step 800:
+Step 900:
+Simulation complete. Output saved to Hybrid_v0_H3_5657_1000_output.txt

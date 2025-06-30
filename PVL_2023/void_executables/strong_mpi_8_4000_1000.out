@@ -1,7 +1,6 @@
-Job started from /home/rn14pyry/pbs.1009755.mmaster02.x8z
+Job started from /home/rn14pyry/pbs.1008462.mmaster02.x8z
 Running in directory /home/rn14pyry/PVL_2023
-select=1:ncpus=8:mpiprocs=8:mem=128gb
-MPI Only Strong Scalability Test with 8 ranks and 8 cores
+Pure MPI Strong Scalability Test with 8 ranks and 8 cores
 OMP_NUM_THREADS = 1
 Step 0:
 Step 100:

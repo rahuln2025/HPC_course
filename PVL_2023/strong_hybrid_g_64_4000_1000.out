@@ -1,0 +1,15 @@
+Job started from /home/rn14pyry/pbs.1008476.mmaster02.x8z
+Running in directory /home/rn14pyry/PVL_2023
+Hybrid Strong Scalability Test with 8 ranks and 64 cores
+OMP_NUM_THREADS = 8
+Step 0:
+Step 100:
+Step 200:
+Step 300:
+Step 400:
+Step 500:
+Step 600:
+Step 700:
+Step 800:
+Step 900:
+Simulation complete. Output saved to Hybrid_v0_4000_1000_output.txt

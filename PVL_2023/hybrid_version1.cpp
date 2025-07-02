@@ -1,4 +1,5 @@
 #include "mpi.h"
+#include <omp.h>
 #include <vector>
 #include <random>
 #include <chrono>
@@ -14,13 +15,20 @@ int main(int argc, char** argv) {
 
     // ---------------------- INITIALIZATION ----------------------
     // Initialize MPI
-    MPI_Init(&argc, &argv);
+    //MPI_Init(&argc, &argv);
+    int provided;
+    MPI_Init_thread(&argc, &argv, MPI_THREAD_FUNNELED, &provided);
+
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    // Parameters
-    const int grid_size = 4000; // Size of the grid
+    if (provided < MPI_THREAD_FUNNELED && rank == 0)
+        std::cerr << "Warning: MPI library does not provide FUNNELED thread support\n";
+    
+        // Parameters
+    int weak_test_ix = 4; // weak test index, used for output file name (ONLY FOR WEAK SCALABILITY TESTS)
+    const int grid_size = 8000; // Size of the grid
     const int steps = 1000; // Number of simulation steps
     const double p = 0.5; // probability of infection
     const double q = 0.3; // probability of recovery
@@ -103,6 +111,7 @@ int main(int argc, char** argv) {
     std::vector<int> flat_full_grid; // leave it empty
     if (rank == 0) {
         flat_full_grid.reserve(grid_size * grid_size); // reserve memory
+        #pragma omp parallel for 
         for (int i = 0; i < grid_size; i++)
             for (int j = 0; j < grid_size; j++)
                 flat_full_grid.push_back(full_grid[i][j]); // correctly flatten
@@ -116,6 +125,7 @@ int main(int argc, char** argv) {
 
 
     // Reconstruct local grid for each rank from flat local grids
+    #pragma omp parallel for
     for (int i = 0; i < local_rows; i++)
         for (int j = 0; j < grid_size; j++)
             local_grid[i][j] = flat_local_grid[i * grid_size + j];
@@ -132,6 +142,7 @@ int main(int argc, char** argv) {
 
         // --- Collection and storing output for each iteration ---
         // Collect flat local grid for gathering from all ranks
+        #pragma omp parallel for
         for (int i = 0; i< local_rows; ++i){
             for (int j = 0; j < grid_size; ++j){
                 flat_local_grid[i * grid_size + j] = local_grid[i][j];
@@ -193,62 +204,69 @@ int main(int argc, char** argv) {
        
 
         // --- Infection and recovery loop ---
-       for (int i = 0; i < local_rows; i++) {
-            for (int j = 0; j < grid_size; j++) {
-                // If cell infected, check neighbors and attempt to infect them
-                if (local_grid[i][j] == INFECTED) {
-                    for (int d = 0; d < 4; d++) {
-                        int ni = i + directions[d][0];
-                        int nj = j + directions[d][1];
-                        int neighbor_val = -1;
-                        // Find neighbor' state
-                        // Check if neighbor is within local grid interior
-                        if (ni >= 0 && ni < local_rows && nj >= 0 && nj < grid_size) {
-                            neighbor_val = local_grid[ni][nj];
-                        } 
-                        // handle top rows of local grid
-                        // not applicable for rank 0 as it dows not have a top neighbor
-                        else if (ni == -1 && rank > 0 && nj >= 0 && nj < grid_size) {
-                            neighbor_val = recv_top[nj];
-                        } 
-                        // handle bottom rows of local grid
-                        // not applicable for the last rank as it does not have a bottom neighbor
-                        else if (ni == local_rows && rank < size - 1 && nj >= 0 && nj < grid_size) {
-                            neighbor_val = recv_bottom[nj];
-                        }
+        #pragma omp parallel default(shared)
+        {
+        //     int tid = omp_get_thread_num();
+        //     std::mt19937 thread_rng(base_seed + tid);
+        //     std::uniform_real_distribution<double> thread_prob(0.0, 1.0);
 
-                        // If neighbor is susceptible, attempt to infect
-                        if (neighbor_val == SUSCEPTIBLE && prob(rng) < p) {
+            #pragma omp for schedule(static)
+            for (int i = 0; i < local_rows; i++) {
+                for (int j = 0; j < grid_size; j++) {
+                    // If cell infected, check neighbors and attempt to infect them
+                    if (local_grid[i][j] == INFECTED) {
+                        for (int d = 0; d < 4; d++) {
+                            int ni = i + directions[d][0];
+                            int nj = j + directions[d][1];
+                            int neighbor_val = -1;
+                            // Find neighbor' state
+                            // Check if neighbor is within local grid interior
                             if (ni >= 0 && ni < local_rows && nj >= 0 && nj < grid_size) {
-                                new_local_grid[ni][nj] = INFECTED;
-                            }
-                            // Update ghost rows by infection
+                                neighbor_val = local_grid[ni][nj];
+                            } 
+                            // handle top rows of local grid
+                            // not applicable for rank 0 as it dows not have a top neighbor
                             else if (ni == -1 && rank > 0 && nj >= 0 && nj < grid_size) {
-                                infect_top[nj] = 1; // Mark infection for top neighbor
-                            }
+                                neighbor_val = recv_top[nj];
+                            } 
+                            // handle bottom rows of local grid
+                            // not applicable for the last rank as it does not have a bottom neighbor
                             else if (ni == local_rows && rank < size - 1 && nj >= 0 && nj < grid_size) {
-                                infect_bottom[nj] = 1; // Mark infection for bottom neighbor
+                                neighbor_val = recv_bottom[nj];
                             }
-                            
+
+                            // If neighbor is susceptible, attempt to infect
+                            if (neighbor_val == SUSCEPTIBLE && prob(rng) < p) {
+                                if (ni >= 0 && ni < local_rows && nj >= 0 && nj < grid_size) {
+                                    new_local_grid[ni][nj] = INFECTED;
+                                }
+                                // Update ghost rows by infection
+                                else if (ni == -1 && rank > 0 && nj >= 0 && nj < grid_size) {
+                                    infect_top[nj] = 1; // Mark infection for top neighbor
+                                }
+                                else if (ni == local_rows && rank < size - 1 && nj >= 0 && nj < grid_size) {
+                                    infect_bottom[nj] = 1; // Mark infection for bottom neighbor
+                                }
+                            }
+                        }
+                        // Attempt to recover an infected cell and manage immune period
+                        // If the cell is infected, it can recover with probability q
+                        if (prob(rng) < q) {
+                            new_local_grid[i][j] = RECOVERED;
+                            new_local_immune_period[i][j] = t;
+                        }
+                    // if cell is recovered, decrease immune period or reset to susceptible
+                    } else if (local_grid[i][j] == RECOVERED) {
+                        new_local_immune_period[i][j] -= 1;
+                        if (new_local_immune_period[i][j] <= 0) {
+                            new_local_grid[i][j] = SUSCEPTIBLE;
+                            new_local_immune_period[i][j] = 0; // Reset immune period
                         }
                     }
-                    // Attempt to recover an infected cell and manage immune period
-                    // If the cell is infected, it can recover with probability q
-                    if (prob(rng) < q) {
-                        new_local_grid[i][j] = RECOVERED;
-                        new_local_immune_period[i][j] = t;
-                    }
-                
-                // if cell is recovered, decrease immune period or reset to susceptible
-                } else if (local_grid[i][j] == RECOVERED) {
-                    new_local_immune_period[i][j] -= 1;
-                    if (new_local_immune_period[i][j] <= 0) {
-                        new_local_grid[i][j] = SUSCEPTIBLE;
-                        new_local_immune_period[i][j] = 0; // Reset immune period
-                    }
-                }
-            }
+                } // end of inner loop for j
+            } // end of outer loop for i
         }
+
         // --- Ghost row handling ---
         // Exchange updated ghost rows 
         // Exchange infection info with neighbors
@@ -270,6 +288,7 @@ int main(int argc, char** argv) {
 
         // Apply received infections to edge rows
         if (rank > 0) {
+            #pragma omp parallel for
             for (int j = 0; j < grid_size; ++j) {
                 if (recv_infect_top[j] == INFECTED && new_local_grid[0][j] == SUSCEPTIBLE) {
                     new_local_grid[0][j] = INFECTED;
@@ -277,6 +296,7 @@ int main(int argc, char** argv) {
             }
         }
         if (rank < size - 1) {
+            #pragma omp parallel for
             for (int j = 0; j < grid_size; ++j) {
                 if (recv_infect_bottom[j] == INFECTED && new_local_grid[local_rows - 1][j] == SUSCEPTIBLE) {
                     new_local_grid[local_rows - 1][j] = INFECTED;
@@ -286,13 +306,14 @@ int main(int argc, char** argv) {
         // --- End ghost row handling ---
         local_grid = new_local_grid;
         local_immune_period = new_local_immune_period;
-    }
+    } // for step loop
+    
 
     // ------------------------------ END OF SIMULATION --------------------------------------------
     // Save output_matrix to a .txt file (only root)
 
     if (rank == 0) {
-        std::string output_file = "MPI_v3_" + std::to_string(grid_size) + "_1000_output.txt"; // output file name      
+        std::string output_file = "Hybrid_v0_H" + std::to_string(weak_test_ix) + "_" + std::to_string(grid_size) + "_1000_output.txt"; // output file name      
         std::ofstream outfile(output_file);
         for (const auto& row : output_matrix) {
             for (size_t i = 0; i < row.size(); i++) {

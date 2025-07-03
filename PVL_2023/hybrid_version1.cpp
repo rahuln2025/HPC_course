@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
     
         // Parameters
     int weak_test_ix = 4; // weak test index, used for output file name (ONLY FOR WEAK SCALABILITY TESTS)
-    const int grid_size = 8000; // Size of the grid
+    const int grid_size = 4000; // Size of the grid
     const int steps = 1000; // Number of simulation steps
     const double p = 0.5; // probability of infection
     const double q = 0.3; // probability of recovery
@@ -313,7 +313,8 @@ int main(int argc, char** argv) {
     // Save output_matrix to a .txt file (only root)
 
     if (rank == 0) {
-        std::string output_file = "Hybrid_v0_H" + std::to_string(weak_test_ix) + "_" + std::to_string(grid_size) + "_1000_output.txt"; // output file name      
+        // Add for weak test labels: + std::to_string(weak_test_ix) + "_"
+        std::string output_file = "Hybrid_v0" + std::to_string(grid_size) + "_1000_output.txt"; // output file name      
         std::ofstream outfile(output_file);
         for (const auto& row : output_matrix) {
             for (size_t i = 0; i < row.size(); i++) {

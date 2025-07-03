@@ -41,13 +41,13 @@ def plot_scaling(
     else:
         raise ValueError("scaling_type must be 'strong' or 'weak'")
 
-    plt.plot(core_counts[baseline_index], ideal_times, linestyle='--', color='gray', label=ideal_label)
+    #plt.plot(core_counts[baseline_index], ideal_times, linestyle='--', color='gray', label=ideal_label)
 
-    plt.xscale('log')
-    plt.yscale('log')
-    plt.xlabel("Total cores (MPI ranks × threads)")
+    # plt.xscale('log')
+    # plt.yscale('log')
+    plt.xlabel("Total cores (nodes × ncpus)")
     plt.ylabel("Runtime [s]")
-    # plt.xticks(core_counts[0], rotation=0)
+    plt.xticks(core_counts[0], rotation=0)
     plt.title(title)
     plt.grid(True, which="both", ls=":")
     plt.legend()
@@ -60,15 +60,21 @@ def plot_scaling(
 # Strong scaling example (fixed 4000x4000 grid)
 cores = [ [8, 16, 32, 64],       # Pure MPI
           [8, 16, 32, 64] ]          # Hybrid MPI+OpenMP
-times = [ [20.685, 24.458, 28.001, 62.098],     # Example times (MPI) 20.685, 24.458, 28.001, 62.098
-          [117.04, 136.652, 197.274, 249.3] ]        # Example times (Hybrid)
+times = [ [88.32, 82.829, 78.487, 58.082],     # Example times (MPI) 20.685, 24.458, 28.001, 62.098
+          [85.371, 69.379, 67.187, 73.985] ]        # Example times (Hybrid)
+
+# Weak scaling
+# cores = [ [8, 16, 32, 64],       # Pure MPI
+#           [8, 16, 32, 64] ]          # Hybrid MPI+OpenMP
+# times = [ [122.856, 148.484, 191.158, 291.55],     # Example times (MPI) 20.685, 24.458, 28.001, 62.098
+#           [117.04, 136.652, 197.274, 249.3] ]        # Example times (Hybrid)
 
 labels = ['Pure MPI OMP_NUM_THREADS=1', 'Hybrid (1x8) OMP_NUM_THREADS=8']
 
 plot_scaling(core_counts=cores,
              runtimes=times,
              labels=labels,
-             scaling_type='weak',
+             scaling_type='strong',
              baseline_index=0,
-             title='Weak Scaling Plot',
-             save_as='./snapshots/weak_scaling.png')
+             title='Strong Scaling Plot (4000x4000 grid)',
+             save_as='./snapshots/strong_scaling3.png')

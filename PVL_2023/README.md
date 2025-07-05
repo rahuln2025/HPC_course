@@ -29,7 +29,7 @@ In my opinion, it is more like a cellular automata problem.
 
 ### A glimpse of the simulation results
 
-![Simulation GIF](assets/MPI_v0_500_1000_output.gif)
+![Simulation GIF](assets/sir_simulation_500_1000.gif)
 
 500x500 grid starting with 5 random cells being infected and how the infection spreads over 1000 steps. 
 
@@ -44,10 +44,39 @@ The problem size: 4000x4000 grid with 1000 steps. MPI Only and hybrid. For hybri
 
 ![Strong Scaling](assets/strong_scaling3.png)
 
+
+| run | nodes | ncpus | mpiprocs| num threads | total cores | grid size | time (ms) |
+| --- | --- | --- | --- | --- | --- |--- | --- |
+| Hybrid |
+| H1 | 1 | 8 | 8 | 8  | 8 | 4000x4000 | 85.37 |
+| H2 | 2 | 8 | 8 | 16 | 8 | 4000x4000 | 69.38 |
+| H3 | 4 | 8 | 8 | 32 | 8 | 4000x4000 | 67.19 |
+| H4 | 8 | 8 | 8 | 64 | 8 | 4000x4000 | 73.99 |
+|MPI_Only | 
+| M1 | 1 | 8 | 8 | 8  | 1 | 4000x4000 | 88.32 |
+| M2 | 2 | 8 | 8 | 16 | 1 | 4000x4000 | 82.83 |
+| M3 | 4 | 8 | 8 | 32 | 1 | 4000x4000 | 78.49 |
+| M4 | 8 | 8 | 8 | 64 | 1 | 4000x4000 | 58.08 |
+
+
+
 #### Weak scaling
-The problem size is increase proportionally as the cores are increased. It is attempted to ensure that the per rank core grid remains 1000x1000. For hybrid ```OMP_NUM_THREADS=8``` for the same cases as that of MPI Only. 
+The problem size is increase proportionally as the cores are increased. It is attempted to ensure that the per rank core grid remains 1000x1000 (e.g. H3: $\sqrt32*1000 = 5657$). For hybrid ```OMP_NUM_THREADS=8``` for the same cases as that of MPI Only. 
 
 ![Weak Scaling](assets/weak_scaling2.png)
+
+| run | nodes | ncpus | mpiprocs| num threads | total cores | grid size | time (ms) |
+| --- | --- | --- | --- | --- | --- |--- | --- |
+| Hybrid |
+| H1 | 1 | 8 | 1 | 8  | 8 | 2828x2828 | 117.04 |
+| H2 | 2 | 8 | 1 | 16 | 8 | 4000x4000 | 136.65 |
+| H3 | 4 | 8 | 1 | 32 | 8 | 5657x5657 | 197.27 |
+| H4 | 8 | 8 | 1 | 64 | 8 | 8000x8000 | 249.30 |
+|MPI_Only | 
+| M1 | 1 | 8 | 1 | 8  | 1 | 2828x2828 | 122.87 |
+| M2 | 2 | 8 | 1 | 16 | 1 | 4000x4000 | 148.48 |
+| M3 | 4 | 8 | 1 | 32 | 1 | 5657x5657 | 191.16 |
+| M4 | 8 | 8 | 1 | 64 | 1 | 8000x8000 | 291.55 |
 
 
 ### Overview Pseudocode

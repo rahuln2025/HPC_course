@@ -12,10 +12,13 @@
 
 /VOID*
 
-*.png
-
-*.gif
-
 *.txt
 
 *.cache/
+
+!assets/*.png
+!assets/*.gif
+
+*.png
+
+*.gif

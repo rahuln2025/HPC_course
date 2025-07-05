@@ -31,7 +31,7 @@ In my opinion, it is more like a cellular automata problem.
 
 ![Simulation GIF](assets/sir_simulation_500_1000.gif)
 
-500x500 grid starting with 5 random cells being infected and how the infection spreads over 1000 steps. 
+1000x1000 grid starting with 5 random cells being infected and how the infection spreads over 1000 steps. 
 
 
 

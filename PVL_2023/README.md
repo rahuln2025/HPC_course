@@ -17,7 +17,7 @@ In my opinion, it is more like a cellular automata problem.
 
 ## Steps for the project: 
 
-1. Try $p = 0.2, q = 0.3, t = 10$ and start with 5 initial infections at random cells. 
+1. Try $p = 0.5, q = 0.3, t = 5$ and start with 5 initial infections at random cells. 
 2. First, a Python code to implement the problem and get a quick understanding. This code will be sequential. 
 3. Translate Python code to C++, but again sequential in nature. Check if the implementation is correct and add visualization. 
 4. Select a grid size such that the sequential run time is between 100s to 400s. 
@@ -31,13 +31,13 @@ In my opinion, it is more like a cellular automata problem.
 
 ![Simulation GIF](assets/sir_simulation_500_1000.gif)
 
-1000x1000 grid starting with 5 random cells being infected and how the infection spreads over 1000 steps. 
+1000x1000 grid starting with 5 random cells being infected and how the infection spreads over 1000 steps. Yellow: recovered (2), green: infected (1), purple: susceptible (0).
 
 
 
 ### Scaling
 
-Ref. sequential time for 4000x4000 grid with 1000 steps: 708.891 ms
+Ref. sequential time for 4000x4000 grid with 1000 steps: 708.891 s.
 
 #### Strong scaling
 The problem size: 4000x4000 grid with 1000 steps. MPI Only and hybrid. For hybrid ```OMP_NUM_THREADS=8``` for the same cases as that of MPI Only. 
@@ -45,7 +45,7 @@ The problem size: 4000x4000 grid with 1000 steps. MPI Only and hybrid. For hybri
 ![Strong Scaling](assets/strong_scaling3.png)
 
 
-| run | nodes | ncpus | mpiprocs| num threads | total cores | grid size | time (ms) |
+| run | nodes | ncpus | mpiprocs| num threads | total cores | grid size | time (s) |
 | --- | --- | --- | --- | --- | --- |--- | --- |
 | Hybrid |
 | H1 | 1 | 8 | 8 | 8  | 8 | 4000x4000 | 85.37 |
@@ -65,7 +65,7 @@ The problem size is increase proportionally as the cores are increased. It is at
 
 ![Weak Scaling](assets/weak_scaling2.png)
 
-| run | nodes | ncpus | mpiprocs| num threads | total cores | grid size | time (ms) |
+| run | nodes | ncpus | mpiprocs| num threads | total cores | grid size | time (s) |
 | --- | --- | --- | --- | --- | --- |--- | --- |
 | Hybrid |
 | H1 | 1 | 8 | 1 | 8  | 8 | 2828x2828 | 117.04 |

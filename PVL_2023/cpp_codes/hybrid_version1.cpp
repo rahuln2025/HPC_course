@@ -108,13 +108,13 @@ int main(int argc, char** argv) {
         start = start + sendcounts[i];
     }
     // Flatten full grid
-    std::vector<int> flat_full_grid; // leave it empty
+    std::vector<int> flat_full_grid; 
     if (rank == 0) {
         flat_full_grid.reserve(grid_size * grid_size); // reserve memory
         #pragma omp parallel for 
         for (int i = 0; i < grid_size; i++)
             for (int j = 0; j < grid_size; j++)
-                flat_full_grid.push_back(full_grid[i][j]); // correctly flatten
+                flat_full_grid.push_back(full_grid[i][j]); 
     }
 
     std::vector<int> flat_local_grid(local_rows * grid_size);

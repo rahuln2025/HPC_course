@@ -159,6 +159,12 @@ mpiexec ./ex07
 2. Submitting the job script is the same as for OpenMP binaries. 
 
 
+#### Using Python
+
+1. You may need to use Python for simple scripts used to post-process results or make first MVP codes (w/o any parallelization).
+2. Just need to load the Python module: ```module load python/gcc/11.4.0```. 
+3. Then use your Python scripts as you normally run then from terminal. 
+
 # Matrix Handling in C++ and OpenMP
 
 ### Matrix storage and indexing in C++ with std::vector
@@ -334,7 +340,7 @@ void print_vector(const std::vector<double> &v)
 
 # Some MPI Caveats
 
-There are several versions of ```MPI_Send``` and ```MPI_Recv``. Here's a quick summary for them. I am not an expert so feel free to correct if I am wrong here. 
+There are several versions of ```MPI_Send``` and ```MPI_Recv```. Here's a quick summary for them. I am not an expert so feel free to correct if I am wrong here. 
 
 ### MPI Send/Receive Commands
 
@@ -358,6 +364,18 @@ There are several versions of ```MPI_Send``` and ```MPI_Recv``. Here's a quick s
 | MPI_Ssend     | MPI_Recv     | Yes        | Synchronous; safe if receive is ready.                     |
 | MPI_Ssend     | MPI_Irecv    | No         | Can deadlock; ensure receive is posted before send.        |
 
+### More documentation on the way ...
+
+
+## Some useful links:
+
+0. Since we are at TUBAF, we need to check the [TUBAF HPC Documentation](https://tu-freiberg.de/en/urz/service-portfolio/high-performance-computing-hpc) of handling HPC Cluster. 
+
+1. Rookie HPC has a well-organized and easy to navigate documentation: 
+[MPI Documentation](https://rookiehpc.org/mpi/docs/index.html) and [OpenMP Documentation](https://rookiehpc.org/openmp/docs/index.html).
+
+2. [HPC Wiki](https://hpc-wiki.info/hpc/HPC_Wiki)
+ has almost all things you need to know.
 
 
 

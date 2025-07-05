@@ -42,12 +42,12 @@ Ref. sequential time for 4000x4000 grid with 1000 steps: 708.891 ms
 #### Strong scaling
 The problem size: 4000x4000 grid with 1000 steps. MPI Only and hybrid. For hybrid ```OMP_NUM_THREADS=8``` for the same cases as that of MPI Only. 
 
-![Strong Scaling](snapshots/strong_scaling3.png)
+![Strong Scaling](assets/strong_scaling3.png)
 
 #### Weak scaling
 The problem size is increase proportionally as the cores are increased. It is attempted to ensure that the per rank core grid remains 1000x1000. For hybrid ```OMP_NUM_THREADS=8``` for the same cases as that of MPI Only. 
 
-![Weak Scaling](snapshots/weak_scaling2.png)
+![Weak Scaling](assets/weak_scaling2.png)
 
 
 ### Overview Pseudocode

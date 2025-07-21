@@ -1,0 +1,24 @@
+Job started from /home/rn14pyry/pbs.1035776.mmaster02.x8z
+Running in directory /home/rn14pyry/PVL_2023
+select=1:ncpus=4:mpiprocs=4:mem=64gb
+Hybrid 2.0 Strong Scalability Test 2.0 with 4 ranks and 4 cores
+OMP_NUM_THREADS = 2
+Rank 1 has 250 rows, from 250 to 499
+Rank 1 has arr_x: 749 850 86 94 343 and arr_y: 387 371 260 167 215 
+Rank 0 has 250 rows, from 0 to 249
+Rank 0 has arr_x: 749 850 86 94 343 and arr_y: 387 371 260 167 215 
+Rank 2 has 250 rows, from 500 to 749
+Rank 2 has arr_x: 749 850 86 94 343 and arr_y: 387 371 260 167 215 
+Rank 3 has 250 rows, from 750 to 999
+Rank 3 has arr_x: 749 850 86 94 343 and arr_y: 387 371 260 167 215 
+Step 0:
+Step 100:
+Step 200:
+Step 300:
+Step 400:
+Step 500:
+Step 600:
+Step 700:
+Step 800:
+Step 900:
+Simulation complete. Output saved to Hybrid2_1000_1000_output.txt

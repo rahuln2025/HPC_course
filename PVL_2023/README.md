@@ -42,41 +42,39 @@ Ref. sequential time for 4000x4000 grid with 1000 steps: 708.891 s.
 #### Strong scaling
 The problem size: 4000x4000 grid with 1000 steps. MPI Only and hybrid. For hybrid ```OMP_NUM_THREADS=8``` for the same cases as that of MPI Only. 
 
-![Strong Scaling](assets/strong_scaling3.png)
+![Strong Scaling](assets/strong_scaling.png)
 
 
-| run | nodes | ncpus | mpiprocs| num threads | total cores | grid size | time (s) |
+| run | nodes | ncpus | mpiprocs| total cores | OMP_NUM_THREADS | grid size | time (s) |
 | --- | --- | --- | --- | --- | --- |--- | --- |
 | Hybrid |
-| H1 | 1 | 8 | 8 | 8  | 8 | 4000x4000 | 85.37 |
-| H2 | 2 | 8 | 8 | 16 | 8 | 4000x4000 | 69.38 |
-| H3 | 4 | 8 | 8 | 32 | 8 | 4000x4000 | 67.19 |
-| H4 | 8 | 8 | 8 | 64 | 8 | 4000x4000 | 73.99 |
+| H1 | 1 | 8 | 8 | 8  | 8 | 4000x4000 | 64.868 |
+| H2 | 2 | 8 | 8 | 16 | 8 | 4000x4000 | 35.788 |
+| H3 | 4 | 8 | 8 | 32 | 8 | 4000x4000 | 18.701 |
 |MPI_Only | 
-| M1 | 1 | 8 | 8 | 8  | 1 | 4000x4000 | 88.32 |
-| M2 | 2 | 8 | 8 | 16 | 1 | 4000x4000 | 82.83 |
-| M3 | 4 | 8 | 8 | 32 | 1 | 4000x4000 | 78.49 |
-| M4 | 8 | 8 | 8 | 64 | 1 | 4000x4000 | 58.08 |
+| M1 | 1 | 8 | 8 | 8  | 1 | 4000x4000 | 70.981 |
+| M2 | 2 | 8 | 8 | 16 | 1 | 4000x4000 | 30.167 |
+| M3 | 4 | 8 | 8 | 32 | 1 | 4000x4000 | 19.856 |
+
 
 
 
 #### Weak scaling
 The problem size is increase proportionally as the cores are increased. It is attempted to ensure that the per rank core grid remains 1000x1000 (e.g. H3: $\sqrt32*1000 = 5657$). For hybrid ```OMP_NUM_THREADS=8``` for the same cases as that of MPI Only. 
 
-![Weak Scaling](assets/weak_scaling2.png)
+![Weak Scaling](assets/weak_scaling.png)
 
-| run | nodes | ncpus | mpiprocs| num threads | total cores | grid size | time (s) |
+| run | nodes | ncpus | mpiprocs| total cores | OMP_NUM_THREADS | grid size | time (s) |
 | --- | --- | --- | --- | --- | --- |--- | --- |
 | Hybrid |
-| H1 | 1 | 8 | 1 | 8  | 8 | 2828x2828 | 117.04 |
-| H2 | 2 | 8 | 1 | 16 | 8 | 4000x4000 | 136.65 |
-| H3 | 4 | 8 | 1 | 32 | 8 | 5657x5657 | 197.27 |
-| H4 | 8 | 8 | 1 | 64 | 8 | 8000x8000 | 249.30 |
+| H1 | 1 | 8 | 1 | 8  | 8 | 2828x2828 | 204.384 |
+| H2 | 2 | 8 | 1 | 16 | 8 | 4000x4000 | 186.613 |
+| H3 | 4 | 8 | 1 | 32 | 8 | 5657x5657 | 163.526 |
 |MPI_Only | 
-| M1 | 1 | 8 | 1 | 8  | 1 | 2828x2828 | 122.87 |
-| M2 | 2 | 8 | 1 | 16 | 1 | 4000x4000 | 148.48 |
-| M3 | 4 | 8 | 1 | 32 | 1 | 5657x5657 | 191.16 |
-| M4 | 8 | 8 | 1 | 64 | 1 | 8000x8000 | 291.55 |
+| M1 | 1 | 8 | 1 | 8  | 1 | 2828x2828 | 232.051 |
+| M2 | 2 | 8 | 1 | 16 | 1 | 4000x4000 | 180.383 |
+| M3 | 4 | 8 | 1 | 32 | 1 | 5657x5657 | 207.569 |
+
 
 
 ### Overview Pseudocode
@@ -87,14 +85,17 @@ The problem size is increase proportionally as the cores are increased. It is at
     - Setup random number generation
 
 2. Setup Grid
-    - Create initial grid on rank 0
     - Calculate distribution across ranks [Logic](#calculate-row-distribution-among-ranks)
-    - Scatter grid portions to all ranks
+    - Create local rank grids
+    - Rank 0 and random number generator decide first 5 infection positions
+    - Broadcast the positions to all ranks
+    - Infect corresponding infected cells in local ranks
 
 3. Main Simulation Loop
-    - Gather current state for output
+    - Gather current state for output (only if storing output on)
     - Exchange ghost rows with neighbors [Logic](#exchange-the-ghost-rows-before-update)
     - Process local grid section
+      - Thread-safe random number generator with unique seed
       - Handle infections
       - Process recoveries
       - Update immunity timers
@@ -192,70 +193,72 @@ Here's the relevant pseudocode. Check out the main simulation loop's process loc
 ### Initialization
 
 ```cpp
-// Initialize MPI and get rank info
-Initialize MPI
+// Initialize MPI with thread support
+MPI_Init_thread(&argc, &argv, MPI_THREAD_FUNNELED, &provided)
 Get rank and size from MPI_COMM_WORLD
+Check if MPI provides sufficient thread support
 
 // Set simulation parameters
-grid_size = 4000
+grid_size = 5657  // Updated for weak scaling tests
 steps = 1000
 infection_prob (p) = 0.5
 recovery_prob (q) = 0.3
 immunity_duration (t) = 5
 initial_infected = 5
 
-// Initialize random number generator
-rng = create random number generator with time-based seed
-prob_dist = uniform distribution [0.0, 1.0]
+// Initialize random number generator (only for initial infections)
+rng_outer = create random number generator with time-based seed
 grid_dist = uniform distribution [0, grid_size-1]
 
-// Create full grid on rank 0
+// Generate initial infection coordinates on rank 0 only
 if rank == 0:
-    full_grid = create 2D vector[grid_size][grid_size] initialized to SUSCEPTIBLE
-    full_immune_period = create 2D vector[grid_size][grid_size] initialized to 0
-    
-    // Randomly place initial infections
     for k = 0 to initial_infected-1:
-        do:
-            x = random from grid_dist
-            y = random from grid_dist
-        while full_grid[x][y] is not SUSCEPTIBLE
-        full_grid[x][y] = INFECTED
+        arr_x[k] = random from grid_dist
+        arr_y[k] = random from grid_dist
+
+// Broadcast infection coordinates to all ranks
+coords = combined buffer for x and y coordinates
+if rank == 0:
+    pack arr_x and arr_y into coords buffer
+MPI_Bcast(coords, 2*initial_infected, MPI_INT, 0, MPI_COMM_WORLD)
+unpack coords back to arr_x and arr_y on all ranks
 ```
 
-### Grid Distribution
+### Grid Distribution (Direct Local Grid Creation)
+
 ```cpp
 // Calculate distribution of rows among ranks
 rows_per_rank = grid_size / size
 extra_rows = grid_size % size
-for each rank i:
-    if i < extra_rows:
-        sendcounts[i] = (rows_per_rank + 1) * grid_size
-    else:
-        sendcounts[i] = rows_per_rank * grid_size
-    displs[i] = sum of previous sendcounts
 
-// Get local row count for current rank
+// Get local row count and boundaries for current rank
 if rank < extra_rows:
     local_rows = rows_per_rank + 1
 else:
     local_rows = rows_per_rank
 
-// Initialize local grids
+row_start = rank * rows_per_rank + min(rank, extra_rows)
+row_end = row_start + local_rows - 1
+
+// Initialize local grids directly (no scattering from full grid)
 local_grid = create 2D vector[local_rows][grid_size] initialized to SUSCEPTIBLE
 local_immune_period = create 2D vector[local_rows][grid_size] initialized to 0
 
-// Distribute grid using MPI_Scatterv
-if rank == 0:
-    flatten full_grid to flat_full_grid
-flat_local_grid = vector of size local_rows * grid_size
-MPI_Scatterv(flat_full_grid, sendcounts, displs, MPI_INT,
-             flat_local_grid, local_rows * grid_size, MPI_INT, 0, MPI_COMM_WORLD)
+// Place initial infections in local grids
+for k = 0 to initial_infected-1:
+    if arr_y[k] >= row_start and arr_y[k] <= row_end:
+        row_infected = arr_y[k] - row_start  // Convert to local coordinates
+        col_infected = arr_x[k]
+        local_grid[row_infected][col_infected] = INFECTED
 
-// Reconstruct local 2D grid from flat array
-for i = 0 to local_rows-1:
-    for j = 0 to grid_size-1:
-        local_grid[i][j] = flat_local_grid[i * grid_size + j]
+// Setup gathering parameters for output collection
+for each rank i:
+    if i < extra_rows:
+        rows = rows_per_rank + 1
+    else:
+        rows = rows_per_rank
+    sendcounts[i] = rows * grid_size
+    displs[i] = cumulative sum of previous sendcounts
 ```
 
 ### Main Simulation Loop
@@ -264,88 +267,106 @@ for i = 0 to local_rows-1:
 directions = [(−1,0), (1,0), (0,−1), (0,1)]  // Up, Down, Left, Right
 
 for step = 0 to steps-1:
-    // --- Gather grid state for output ---
-    flatten local_grid to flat_local_grid
-    if rank == 0:
-        create flat_gathered_grid[grid_size * grid_size]
+    // --- Optional output collection ---
+    store_output = check command line for "--store" flag
     
-    MPI_Gatherv(flat_local_grid, local_grid_size, MPI_INT,
-                flat_gathered_grid, sendcounts, displs, MPI_INT, 0, MPI_COMM_WORLD)
-    
-    if rank == 0 and step % 100 == 0:
-        store flat_gathered_grid in output_matrix
-        print current step
+    if store_output and step % 100 == 0:
+        // Flatten local grid in parallel
+        #pragma omp parallel for
+        for i = 0 to local_rows-1:
+            for j = 0 to grid_size-1:
+                flat_local_grid[i * grid_size + j] = local_grid[i][j]
+        
+        // Gather to root rank only
+        if rank == 0:
+            create flat_gathered_grid[grid_size * grid_size]
+        
+        MPI_Gatherv(flat_local_grid, local_grid_size, MPI_INT,
+                    flat_gathered_grid, sendcounts, displs, MPI_INT, 0, MPI_COMM_WORLD)
+        
+        if rank == 0:
+            store flat_gathered_grid in output_matrix
     
     // --- Create copies for next state ---
     new_local_grid = copy of local_grid
     new_local_immune_period = copy of local_immune_period
     
     // --- Exchange ghost rows ---
-    if rank > 0:
-        MPI_Sendrecv(first row of local_grid → rank-1,
-                     recv_top ← rank-1's bottom row)
-    
-    if rank < size-1:
-        MPI_Sendrecv(last row of local_grid → rank+1,
-                     recv_bottom ← rank+1's top row)
+    if local_rows > 0:
+        if rank > 0:
+            copy local_grid[0] to top_row buffer
+            MPI_Sendrecv(top_row → rank-1, recv_top ← rank-1)
+        
+        if rank < size-1:
+            copy local_grid[local_rows-1] to bottom_row buffer
+            MPI_Sendrecv(bottom_row → rank+1, recv_bottom ← rank+1)
     
     // --- Initialize infection flags ---
     infect_top = array[grid_size] initialized to 0
     infect_bottom = array[grid_size] initialized to 0
     
-    // --- Process local grid ---
-    for i = 0 to local_rows-1:
-        for j = 0 to grid_size-1:
-            if local_grid[i][j] is INFECTED:
-                // Check all neighbors (up, down, left, right)
-                for each direction in directions:
-                    ni = i + direction[0]
-                    nj = j + direction[1]
+    // --- Process local grid with OpenMP ---
+    #pragma omp parallel default(shared):
+        // Thread-local random number generator
+        tid = omp_get_thread_num()
+        thread_rng = create MT19937 with seed(time + tid + rank*1000)
+        thread_prob = uniform distribution [0.0, 1.0]
+        
+        #pragma omp for schedule(static)
+        for i = 0 to local_rows-1:
+            for j = 0 to grid_size-1:
+                if local_grid[i][j] is INFECTED:
+                    // Check all neighbors (up, down, left, right)
+                    for each direction in directions:
+                        ni = i + direction[0]
+                        nj = j + direction[1]
+                        
+                        // Get neighbor state based on location
+                        if ni >= 0 and ni < local_rows and nj >= 0 and nj < grid_size:
+                            neighbor_val = local_grid[ni][nj]
+                        else if ni == -1 and rank > 0 and nj >= 0 and nj < grid_size:
+                            neighbor_val = recv_top[nj]
+                        else if ni == local_rows and rank < size-1 and nj >= 0 and nj < grid_size:
+                            neighbor_val = recv_bottom[nj]
+                        else:
+                            continue  // Out of bounds
+                        
+                        // Try to infect susceptible neighbors
+                        if neighbor_val is SUSCEPTIBLE and thread_prob(thread_rng) < p:
+                            if ni >= 0 and ni < local_rows and nj >= 0 and nj < grid_size:
+                                new_local_grid[ni][nj] = INFECTED
+                            else if ni == -1 and rank > 0 and nj >= 0 and nj < grid_size:
+                                infect_top[nj] = 1
+                            else if ni == local_rows and rank < size-1 and nj >= 0 and nj < grid_size:
+                                infect_bottom[nj] = 1
                     
-                    // Get neighbor state based on location
-                    if neighbor within local grid:
-                        neighbor_val = local_grid[ni][nj]
-                    else if ni == -1 and rank > 0:
-                        neighbor_val = recv_top[nj]
-                    else if ni == local_rows and rank < size-1:
-                        neighbor_val = recv_bottom[nj]
-                    
-                    // Try to infect susceptible neighbors
-                    if neighbor_val is SUSCEPTIBLE and random < p:
-                        if neighbor within local grid:
-                            new_local_grid[ni][nj] = INFECTED
-                        else if ni == -1 and rank > 0:
-                            infect_top[nj] = 1
-                        else if ni == local_rows and rank < size-1:
-                            infect_bottom[nj] = 1
+                    // Try to recover
+                    if thread_prob(thread_rng) < q:
+                        new_local_grid[i][j] = RECOVERED
+                        new_local_immune_period[i][j] = t
                 
-                // Try to recover
-                if random < q:
-                    new_local_grid[i][j] = RECOVERED
-                    new_local_immune_period[i][j] = t
-            
-            else if local_grid[i][j] is RECOVERED:
-                new_local_immune_period[i][j] -= 1
-                if new_local_immune_period[i][j] <= 0:
-                    new_local_grid[i][j] = SUSCEPTIBLE
-                    new_local_immune_period[i][j] = 0
+                else if local_grid[i][j] is RECOVERED:
+                    new_local_immune_period[i][j] -= 1
+                    if new_local_immune_period[i][j] <= 0:
+                        new_local_grid[i][j] = SUSCEPTIBLE
+                        new_local_immune_period[i][j] = 0
     
     // --- Exchange infection information ---
     if rank > 0:
-        MPI_Sendrecv(infect_top → rank-1,
-                     recv_infect_top ← rank-1)
+        MPI_Sendrecv(infect_top → rank-1, recv_infect_top ← rank-1)
     
     if rank < size-1:
-        MPI_Sendrecv(infect_bottom → rank+1,
-                     recv_infect_bottom ← rank+1)
+        MPI_Sendrecv(infect_bottom → rank+1, recv_infect_bottom ← rank+1)
     
-    // --- Apply received infections ---
+    // --- Apply received infections with OpenMP ---
     if rank > 0:
+        #pragma omp parallel for
         for j = 0 to grid_size-1:
             if recv_infect_top[j] == 1 and new_local_grid[0][j] is SUSCEPTIBLE:
                 new_local_grid[0][j] = INFECTED
     
     if rank < size-1:
+        #pragma omp parallel for
         for j = 0 to grid_size-1:
             if recv_infect_bottom[j] == 1 and new_local_grid[local_rows-1][j] is SUSCEPTIBLE:
                 new_local_grid[local_rows-1][j] = INFECTED
@@ -356,13 +377,18 @@ for step = 0 to steps-1:
 
 // --- Save final output ---
 if rank == 0:
-    open file "MPI_v3_{grid_size}_1000_output.txt"
-    for each row in output_matrix:
-        write row to file with space-separated values
-    close file
-    print "Simulation complete"
+    store_output = check command line for "--store" flag
+    
+    if store_output:
+        open file "Hybrid2_{grid_size}_1000_output.txt"
+        for each row in output_matrix:
+            write row to file with space-separated values
+        close file
+        print "Simulation complete. Output saved to file"
+    else:
+        print "Simulation complete. Output not saved (use --store flag to save output)"
 
-Finalize MPI
+MPI_Finalize()
 ```
 
 

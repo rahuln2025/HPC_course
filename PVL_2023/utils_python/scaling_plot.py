@@ -58,23 +58,23 @@ def plot_scaling(
 
 
 # Strong scaling example (fixed 4000x4000 grid)
-cores = [ [8, 16, 32, 64],       # Pure MPI
-          [8, 16, 32, 64] ]          # Hybrid MPI+OpenMP
-times = [ [88.32, 82.829, 78.487, 58.082],     # Example times (MPI) 20.685, 24.458, 28.001, 62.098
-          [85.371, 69.379, 67.187, 73.985] ]        # Example times (Hybrid)
+# cores = [ [8, 16, 32],       # Pure MPI
+#           [8, 16, 32] ]          # Hybrid MPI+OpenMP
+# times = [ [70.981, 30.167, 19.856],     # Example times (MPI) 20.685, 24.458, 28.001, 62.098
+#           [64.868, 35.788, 18.701] ]        # Example times (Hybrid)
 
 # Weak scaling
-# cores = [ [8, 16, 32, 64],       # Pure MPI
-#           [8, 16, 32, 64] ]          # Hybrid MPI+OpenMP
-# times = [ [122.856, 148.484, 191.158, 291.55],     # Example times (MPI) 20.685, 24.458, 28.001, 62.098
-#           [117.04, 136.652, 197.274, 249.3] ]        # Example times (Hybrid)
+cores = [ [8, 16, 32],       # Pure MPI
+          [8, 16, 32] ]          # Hybrid MPI+OpenMP
+times = [ [232.051, 180.383, 207.569],     # Example times (MPI) 20.685, 24.458, 28.001, 62.098
+          [204.384, 186.613, 163.526]]        # Example times (Hybrid)
 
 labels = ['Pure MPI OMP_NUM_THREADS=1', 'Hybrid (1x8) OMP_NUM_THREADS=8']
 
 plot_scaling(core_counts=cores,
              runtimes=times,
              labels=labels,
-             scaling_type='strong',
+             scaling_type='weak',
              baseline_index=0,
-             title='Strong Scaling Plot (4000x4000 grid)',
-             save_as='./snapshots/strong_scaling3.png')
+             title='Weak Scaling Plot',
+             save_as='./snapshots/v2/weak_scaling.png')

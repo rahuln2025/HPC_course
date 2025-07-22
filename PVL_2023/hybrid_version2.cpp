@@ -28,16 +28,15 @@ int main(int argc, char** argv) {
     
         // Parameters
     int weak_test_ix = 4; // weak test index, used for output file name (ONLY FOR WEAK SCALABILITY TESTS)
-    const int grid_size = 1000; // Size of the grid
+    const int grid_size = 5657; // Size of the grid
     const int steps = 1000; // Number of simulation steps
     const double p = 0.5; // probability of infection
     const double q = 0.3; // probability of recovery
     const int t = 5;     // immune period
     
 
-    // Random number generation
-    std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
-    std::uniform_real_distribution<double> prob(0.0, 1.0);
+    // Random number generation for initial infected cell locations
+    std::mt19937 rng_outer(std::chrono::steady_clock::now().time_since_epoch().count());
     std::uniform_int_distribution<int> dist(0, grid_size - 1);
 
     // Initialize a few infected individuals
@@ -80,27 +79,39 @@ int main(int argc, char** argv) {
     if (rank == 0){
 
         for (int k = 0; k < initial_infected; ++k){
-            x = dist(rng);
+            x = dist(rng_outer);
             arr_x[k] = x;
-            y = dist(rng);
+            y = dist(rng_outer);
             arr_y[k] = y;
         }
     }
 
     // send infected locations to all the ranks
-    MPI_Bcast(arr_x, initial_infected, MPI_INT, 0, MPI_COMM_WORLD);
-    MPI_Bcast(arr_y, initial_infected, MPI_INT, 0, MPI_COMM_WORLD);
+    int coords[2*initial_infected];  // Combined buffer for both arrays
+    if (rank == 0) {
+        for (int i = 0; i < initial_infected; i++) {
+            coords[i] = arr_x[i];
+            coords[i + initial_infected] = arr_y[i];
+        }
+    }
+    MPI_Bcast(coords, 2*initial_infected, MPI_INT, 0, MPI_COMM_WORLD);
+    
+    // Unpack the received data
+    for (int i = 0; i < initial_infected; i++) {
+        arr_x[i] = coords[i];
+        arr_y[i] = coords[i + initial_infected];
+    }
 
-    std::cout<< "Rank " << rank << " has " << local_rows << " rows, from " << row_start << " to " << row_end << std::endl;
-    std::cout << "Rank " << rank << " has arr_x: ";
-    for (int k = 0; k < initial_infected; ++k) {
-        std::cout << arr_x[k] << " ";
-    }
-    std::cout << "and arr_y: ";
-    for (int k = 0; k < initial_infected; ++k) {
-        std::cout << arr_y[k] << " ";
-    }
-    std::cout << std::endl;
+    // std::cout<< "Rank " << rank << " has " << local_rows << " rows, from " << row_start << " to " << row_end << std::endl;
+    // std::cout << "Rank " << rank << " has arr_x: ";
+    // for (int k = 0; k < initial_infected; ++k) {
+    //     std::cout << arr_x[k] << " ";
+    // }
+    // std::cout << "and arr_y: ";
+    // for (int k = 0; k < initial_infected; ++k) {
+    //     std::cout << arr_y[k] << " ";
+    // }
+    // std::cout << std::endl;
     int row_infected;
     int col_infected;
     for (int k = 0; k < initial_infected; ++k){
@@ -153,24 +164,30 @@ int main(int argc, char** argv) {
         // --- Collection and storing output for each iteration ---
         // Collect flat local grid for gathering from all ranks
 
-        #pragma omp parallel for
-        for (int i = 0; i< local_rows; ++i){
-            for (int j = 0; j < grid_size; ++j){
-                flat_local_grid[i * grid_size + j] = local_grid[i][j];
-            }
+        // Check if store_output flag is provided as command line argument
+        bool store_output = false;
+        if (argc > 1 && std::string(argv[1]) == "--store") {
+            store_output = true;
         }
-        // Gather local grids from all ranks to the root rank
-        // Cannot move Gatherv inside if statement below, as it needs to be executed on all ranks (program will hang)
-        std::vector<int> flat_gathered_grid(grid_size * grid_size); // buffer to gather all local grids
-        MPI_Gatherv(flat_local_grid.data(), flat_local_grid.size(), MPI_INT, 
-                    flat_gathered_grid.data(), sendcounts.data(), displs.data(), MPI_INT, 0, MPI_COMM_WORLD);
-                   // *sendbuf, int sendcount, MPI Datatype sendtype, 
-                   // *recvbuf, int recvcount, int displs, MPI Datatype recvtype, root, MPI_Comm comm)
-        
-        // Save the gathered grid to output_matrix on the root rank
-        if (rank == 0 && step % 100 == 0) { // only root rank gathers and prints output every 1000 steps
-            std::cout << "Step " << step << ":\n";
-            output_matrix.push_back(flat_gathered_grid);
+
+        if (store_output && step % 100 == 0) {
+            // Collect flat local grid for gathering from all ranks
+            #pragma omp parallel for
+            for (int i = 0; i< local_rows; ++i){
+                for (int j = 0; j < grid_size; ++j){
+                    flat_local_grid[i * grid_size + j] = local_grid[i][j];
+                }
+            }
+            
+            // Gather local grids from all ranks to the root rank
+            std::vector<int> flat_gathered_grid(grid_size * grid_size);
+            MPI_Gatherv(flat_local_grid.data(), flat_local_grid.size(), MPI_INT, 
+                        flat_gathered_grid.data(), sendcounts.data(), displs.data(), MPI_INT, 0, MPI_COMM_WORLD);
+            
+            // Save the gathered grid to output_matrix on the root rank
+            if (rank == 0) {
+                output_matrix.push_back(flat_gathered_grid);
+            }
         }
 
 
@@ -217,9 +234,10 @@ int main(int argc, char** argv) {
         // --- Infection and recovery loop ---
         #pragma omp parallel default(shared)
         {
-        //     int tid = omp_get_thread_num();
-        //     std::mt19937 thread_rng(base_seed + tid);
-        //     std::uniform_real_distribution<double> thread_prob(0.0, 1.0);
+            // Each thread gets own rng with unique seed
+            int tid = omp_get_thread_num();
+            std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count() + tid + rank * 1000);
+            std::uniform_real_distribution<double> prob(0.0, 1.0);
 
             #pragma omp for schedule(static)
             for (int i = 0; i < local_rows; i++) {

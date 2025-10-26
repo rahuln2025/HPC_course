@@ -1,3 +1,6 @@
+### Checkout ```PVL_2023``` for HPC Project on cellular automata. Feedback from the oral exam has not been incorporated
+
+
 # Instructions to do HPC assignments & use GitHub
 
 1. Use VSCode for ssh setup using SSH FS Kelvin.vscode-sshfs. Follow instructions on the extension page
@@ -376,6 +379,7 @@ There are several versions of ```MPI_Send``` and ```MPI_Recv```. Here's a quick 
 
 2. [HPC Wiki](https://hpc-wiki.info/hpc/HPC_Wiki)
  has almost all things you need to know.
+
 
 
 
